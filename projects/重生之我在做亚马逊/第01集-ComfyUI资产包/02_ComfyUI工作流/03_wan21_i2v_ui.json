@@ -1,0 +1,779 @@
+{
+  "last_node_id": 14,
+  "last_link_id": 18,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "pos": [
+        40,
+        120
+      ],
+      "size": [
+        330,
+        82
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "wan2.1_i2v_480p_14B_fp8_e4m3fn.safetensors",
+        "default"
+      ],
+      "title": "① Wan2.1 I2V 主模型（14B fp8）"
+    },
+    {
+      "id": 2,
+      "type": "CLIPLoader",
+      "pos": [
+        40,
+        250
+      ],
+      "size": [
+        330,
+        106
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            3,
+            4
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "wan",
+        "default"
+      ],
+      "title": "② 文本编码器（umt5-xxl fp8）"
+    },
+    {
+      "id": 3,
+      "type": "VAELoader",
+      "pos": [
+        40,
+        404
+      ],
+      "size": [
+        330,
+        58
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            5,
+            6
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "wan_2.1_vae.safetensors"
+      ],
+      "title": "③ VAE"
+    },
+    {
+      "id": 4,
+      "type": "CLIPVisionLoader",
+      "pos": [
+        40,
+        510
+      ],
+      "size": [
+        330,
+        58
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP_VISION",
+          "type": "CLIP_VISION",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPVisionLoader"
+      },
+      "widgets_values": [
+        "clip_vision_h.safetensors"
+      ],
+      "title": "④ CLIP Vision（I2V 需要）"
+    },
+    {
+      "id": 5,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        616
+      ],
+      "size": [
+        330,
+        314
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            8,
+            9
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "图01_CHR-01_陈默_四格板.png",
+        "image"
+      ],
+      "title": "⑤ 首帧图 ⚠️ 每段换成对应资产/末帧截图"
+    },
+    {
+      "id": 6,
+      "type": "CLIPVisionEncode",
+      "pos": [
+        420,
+        616
+      ],
+      "size": [
+        300,
+        78
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip_vision",
+          "type": "CLIP_VISION",
+          "link": 7,
+          "shape": 7
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 8,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP_VISION_OUTPUT",
+          "type": "CLIP_VISION_OUTPUT",
+          "links": [
+            10
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPVisionEncode"
+      },
+      "widgets_values": [
+        "none"
+      ],
+      "title": "⑥ 图像视觉编码"
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [
+        420,
+        720
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 3,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            11
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "Cinematic live-action shot, cold blue-grey low-key lighting, low saturation, fine film grain, hard directional light, 16:9 widescreen. A 29-year-old Chinese man in a light grey-white cotton shirt with sleeves rolled to mid-forearm sits at a matte-white long meeting table in a dim open-plan office. He lifts his head slowly, his eyes open wide, a bead of sweat slides down his temple into his sideburn. Camera pushes in very slowly on an 85 mm lens, shallow depth of field, focus on his eyes. Natural subtle facial movement, controlled slow pacing, steady handheld breath, realistic skin texture, no digital gloss."
+      ],
+      "title": "⑦ 正向提示词（英文，描述运镜与动作）"
+    },
+    {
+      "id": 8,
+      "type": "CLIPTextEncode",
+      "pos": [
+        420,
+        940
+      ],
+      "size": [
+        400,
+        130
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 4,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            12
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "still image, static, frozen frame, blurry, low quality, distorted face, extra fingers, warped hands, text overlay, watermark, logo, cartoon, anime, 3d render, oversaturated, HDR bloom"
+      ],
+      "title": "⑧ 负向提示词"
+    },
+    {
+      "id": 9,
+      "type": "ModelSamplingSD3",
+      "pos": [
+        860,
+        120
+      ],
+      "size": [
+        300,
+        58
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            2
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ModelSamplingSD3"
+      },
+      "widgets_values": [
+        8.0
+      ],
+      "title": "⑨ Wan 推荐 shift=8.0"
+    },
+    {
+      "id": 10,
+      "type": "WanImageToVideo",
+      "pos": [
+        860,
+        220
+      ],
+      "size": [
+        300,
+        186
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 11,
+          "shape": 7
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 12,
+          "shape": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 5,
+          "shape": 7
+        },
+        {
+          "name": "clip_vision_output",
+          "type": "CLIP_VISION_OUTPUT",
+          "link": 10,
+          "shape": 7
+        },
+        {
+          "name": "start_image",
+          "type": "IMAGE",
+          "link": 9,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            13
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            14
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "links": [
+            15
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "WanImageToVideo"
+      },
+      "widgets_values": [
+        81,
+        704,
+        1280,
+        1,
+        16
+      ],
+      "title": "⑩ I2V 条件（81帧 / 704×1280 / 16fps）"
+    },
+    {
+      "id": 11,
+      "type": "KSampler",
+      "pos": [
+        1200,
+        120
+      ],
+      "size": [
+        320,
+        262
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2,
+          "shape": 7
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 13,
+          "shape": 7
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 14,
+          "shape": 7
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 15,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            16
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        42,
+        "fixed",
+        30,
+        6.0,
+        "uni_pc",
+        "simple",
+        1.0
+      ],
+      "title": "⑪ KSampler（steps30 / cfg6 / uni_pc）"
+    },
+    {
+      "id": 12,
+      "type": "VAEDecode",
+      "pos": [
+        1200,
+        420
+      ],
+      "size": [
+        200,
+        46
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 16,
+          "shape": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 6,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            17
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": [],
+      "title": "⑫ VAE 解码"
+    },
+    {
+      "id": 13,
+      "type": "CreateVideo",
+      "pos": [
+        1200,
+        500
+      ],
+      "size": [
+        300,
+        78
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 17,
+          "shape": 7
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [
+            18
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [
+        16.0
+      ],
+      "title": "⑬ 合成视频（16fps）"
+    },
+    {
+      "id": 14,
+      "type": "SaveVideo",
+      "pos": [
+        1200,
+        610
+      ],
+      "size": [
+        420,
+        400
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "video",
+          "type": "VIDEO",
+          "link": 18,
+          "shape": 7
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "video/wan21_第01集_段01",
+        "mp4",
+        "h264"
+      ],
+      "title": "⑭ 保存 mp4 ⚠️ 每段改文件名"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      9,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      9,
+      0,
+      11,
+      0,
+      "MODEL"
+    ],
+    [
+      3,
+      2,
+      0,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      4,
+      2,
+      0,
+      8,
+      0,
+      "CLIP"
+    ],
+    [
+      5,
+      3,
+      0,
+      10,
+      2,
+      "VAE"
+    ],
+    [
+      6,
+      3,
+      0,
+      12,
+      1,
+      "VAE"
+    ],
+    [
+      7,
+      4,
+      0,
+      6,
+      0,
+      "CLIP_VISION"
+    ],
+    [
+      8,
+      5,
+      0,
+      6,
+      1,
+      "IMAGE"
+    ],
+    [
+      9,
+      5,
+      0,
+      10,
+      4,
+      "IMAGE"
+    ],
+    [
+      10,
+      6,
+      0,
+      10,
+      3,
+      "CLIP_VISION_OUTPUT"
+    ],
+    [
+      11,
+      7,
+      0,
+      10,
+      0,
+      "CONDITIONING"
+    ],
+    [
+      12,
+      8,
+      0,
+      10,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      13,
+      10,
+      0,
+      11,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      14,
+      10,
+      1,
+      11,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      15,
+      10,
+      2,
+      11,
+      3,
+      "LATENT"
+    ],
+    [
+      16,
+      11,
+      0,
+      12,
+      0,
+      "LATENT"
+    ],
+    [
+      17,
+      12,
+      0,
+      13,
+      0,
+      "IMAGE"
+    ],
+    [
+      18,
+      13,
+      0,
+      14,
+      0,
+      "VIDEO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.72,
+      "offset": [
+        0,
+        0
+      ]
+    }
+  },
+  "version": 0.4
+}

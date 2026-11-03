@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>《重生之我在做亚马逊》ComfyUI 漫剧生产资产工作台</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --bg-elev: #111827;
+      --bg-card: #161f33;
+      --bg-code: #0b111e;
+      --border: #26334d;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --gold: #f59e0b;
+      --gold-soft: rgba(245, 158, 11, 0.14);
+      --cyan: #38bdf8;
+      --cyan-soft: rgba(56, 189, 248, 0.14);
+      --green: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top right, #17233c 0%, var(--bg) 45%);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { color: var(--cyan); text-decoration: none; }
+    .container { max-width: 1380px; margin: 0 auto; padding: 28px 24px 72px; }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(22,31,51,0.95) 0%, rgba(15,23,42,0.92) 100%);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 32px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+      margin-bottom: 24px;
+    }
+    .hero-left { max-width: 820px; }
+    .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--gold-soft);
+      color: #fbbf24;
+      border: 1px solid rgba(245,158,11,0.35);
+    }
+    .badge.cyan {
+      background: var(--cyan-soft);
+      color: #7dd3fc;
+      border-color: rgba(56,189,248,0.35);
+    }
+    .badge.green {
+      background: rgba(16,185,129,0.16);
+      color: #6ee7b7;
+      border-color: rgba(16,185,129,0.4);
+    }
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #ffffff, #fde68a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p { color: var(--muted); font-size: 14.5px; }
+    .hero-actions { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 13px 22px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(234,88,12,0.38);
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+    .btn-primary:hover { transform: translateY(-1px); filter: brightness(1.07); color: #fff; }
+    .hero-hint { font-size: 12px; color: var(--muted); }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+    }
+    .tab-btn {
+      background: var(--bg-elev);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); border-color: #3b4f75; }
+    .tab-btn.active {
+      background: var(--gold-soft);
+      color: #fbbf24;
+      border-color: var(--gold);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .sec-title {
+      font-size: 19px;
+      font-weight: 700;
+      margin: 26px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .sec-title:first-child { margin-top: 4px; }
+    .sec-sub { font-size: 13px; color: var(--muted); font-weight: 400; }
+
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-img-wrap {
+      position: relative;
+      aspect-ratio: 1408 / 768;
+      background: #0b111e;
+      overflow: hidden;
+      cursor: zoom-in;
+    }
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.25s ease;
+    }
+    .card-img-wrap:hover img { transform: scale(1.03); }
+    .card-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .card-title { font-size: 16px; font-weight: 700; }
+    .role-tag {
+      font-size: 11.5px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: rgba(16,185,129,0.18);
+      color: #6ee7b7;
+      white-space: nowrap;
+    }
+    .prompt-box {
+      background: var(--bg-code);
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      color: #cbd5e1;
+      max-height: 88px;
+      overflow-y: auto;
+      word-break: break-word;
+    }
+    .card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 4px; }
+    .btn-sm {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-sm:hover { background: #293850; border-color: var(--cyan); color: #fff; }
+    .btn-sm.copied { background: rgba(16,185,129,0.2); border-color: var(--green); color: #6ee7b7; }
+
+    .shot-list { display: flex; flex-direction: column; gap: 18px; }
+    .shot-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 960px) { .shot-card { grid-template-columns: 1fr; } }
+    .shot-refs { display: flex; flex-direction: column; gap: 10px; }
+    .shot-badge-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .shot-num {
+      background: var(--gold);
+      color: #090d16;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 3px 9px;
+      border-radius: 6px;
+    }
+    .kf-preview {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #334155;
+      background: #0b111e;
+      aspect-ratio: 1408 / 768;
+      cursor: zoom-in;
+      position: relative;
+    }
+    .kf-preview img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.25s; }
+    .kf-preview:hover img { transform: scale(1.03); }
+    .kf-tag {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(9, 13, 22, 0.82);
+      color: #6ee7b7;
+      border: 1px solid rgba(16,185,129,0.45);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .ref-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ref-chip {
+      font-size: 11.5px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: #93c5fd;
+      cursor: zoom-in;
+    }
+    .ref-chip:hover { border-color: var(--cyan); color: #fff; }
+    .dialogue-banner {
+      background: rgba(245, 158, 11, 0.09);
+      border-left: 3px solid var(--gold);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin: 4px 0 12px;
+    }
+    .dialogue-meta { font-size: 12px; color: #fbbf24; font-weight: 600; margin-bottom: 3px; }
+    .dialogue-text { font-size: 14.5px; color: #f8fafc; font-weight: 500; }
+    .prompt-dual { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 1120px) { .prompt-dual { grid-template-columns: 1fr; } }
+    .prompt-col-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .wf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 18px; margin-bottom: 24px; }
+    .wf-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .cli-block {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      color: #e2e8f0;
+      overflow-x: auto;
+      line-height: 1.75;
+    }
+    .ep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 16px; }
+    .ep-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+    .ep-card h4 { color: #fbbf24; margin-bottom: 6px; font-size: 16px; }
+    .ep-card p { font-size: 13.5px; color: #cbd5e1; }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 15, 0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 24px;
+      cursor: zoom-out;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 94vw; max-height: 90vh; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <div class="hero-left">
+        <div class="badge-row">
+          <span class="badge">🔥 逆袭爽文漫剧</span>
+          <span class="badge green">✅ 30张高清原图 100% 全部就绪</span>
+          <span class="badge cyan">第1集12镜全满 + 第2集6镜全满</span>
+          <span class="badge cyan">3套原生 ComfyUI 工作流</span>
+        </div>
+        <h1>《重生之我在做亚马逊》本地 ComfyUI 资产工作台</h1>
+        <p>
+          包含 5 大角色标准立绘、4 大场景空镜、3 大核心道具，以及<strong>第1集全部12镜 + 第2集全部6镜（共18镜 1408×768 无边框首帧图）</strong>，可直接喂入本地 ComfyUI Wan 2.1 图生视频工作流一键合成动态成片！
+        </p>
+      </div>
+      <div class="hero-actions" style="min-width:320px;">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+          <a class="btn-primary" href="https://github.com/z1097827834-design/libtv-skills/archive/refs/heads/arena/37df44fa-libtv-skills.zip" target="_blank" rel="noopener noreferrer">
+            📦 新窗口下载完整资产包 (.zip)
+          </a>
+          <button class="btn-sm" id="copy-zip-url-btn" style="padding:11px 14px;font-size:13.5px;border-color:var(--gold);color:#fbbf24;">
+            📋 复制下载直链
+          </button>
+        </div>
+        <span class="hero-hint">提示：内嵌预览框受浏览器沙箱限制拦截直接下载，若点击未弹窗，请点「复制下载直链」粘贴到浏览器新标签页地址栏即可满速下载！</span>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="tab-ep01">🎬 第1集 12镜分镜台 (12/12已生成)</button>
+      <button class="tab-btn" data-tab="tab-ep02">🔥 第2集 6镜分镜台 (6/6已生成)</button>
+      <button class="tab-btn" data-tab="tab-assets">🎭 角色 / 场景 / 道具基础资产库 (12/12)</button>
+      <button class="tab-btn" data-tab="tab-comfy">⚡ 本地 ComfyUI 工作流与一键批跑</button>
+      <button class="tab-btn" data-tab="tab-bible">📖 10集总企划与爽点大纲</button>
+    </nav>
+
+    <section id="tab-ep01" class="tab-panel active">
+      <h2 class="sec-title">🎬 第1集：《封店之夜，重回2018黄金时代》 <span class="sec-sub">12/12 高清无边框首帧已 100% 生成，可直接喂入 Wan 2.1 I2V</span></h2>
+      <div id="shot-list-ep01" class="shot-list"></div>
+    </section>
+
+    <section id="tab-ep02" class="tab-panel">
+      <h2 class="sec-title">🔥 第2集：《截胡爆款专利，赵凯当场傻眼》 <span class="sec-sub">6/6 高清无边框首帧已 100% 生成，反杀恶意跟卖高能爽集</span></h2>
+      <div id="shot-list-ep02" class="shot-list"></div>
+    </section>
+
+    <section id="tab-assets" class="tab-panel">
+      <h2 class="sec-title">👤 角色一致性标准立绘 (5/5) <span class="sec-sub">干净纯色底，直接拖入 ComfyUI IPAdapter / PulID / Flux Kontext / Wan VACE</span></h2>
+      <div id="char-grid" class="asset-grid"></div>
+
+      <h2 class="sec-title">🏙️ 核心场景空镜资产 (4/4) <span class="sec-sub">无人物干扰，用于锁定空间结构与时代光影对比</span></h2>
+      <div id="scene-grid" class="asset-grid"></div>
+
+      <h2 class="sec-title">💻 关键剧情道具资产 (3/3) <span class="sec-sub">特写镜头参考与多图融合素材</span></h2>
+      <div id="prop-grid" class="asset-grid"></div>
+    </section>
+
+    <section id="tab-comfy" class="tab-panel">
+      <h2 class="sec-title">🧩 原生 ComfyUI 工作流下载 <span class="sec-sub">100% 采用 ComfyUI 官方内置核心节点，拖入浏览器画布零报错</span></h2>
+      <div class="wf-grid">
+        <div class="wf-card">
+          <div class="card-title">01 · SDXL / Illustrious 彩漫文生图工作流</div>
+          <p style="font-size:13px;color:var(--muted);">适用于本地装有 Illustrious-XL、Animagine、国漫/韩漫 SDXL 大模型的环境。可无缝串联 IPAdapter FaceID 锁脸扩展后续集数。</p>
+          <div class="card-actions">
+            <a class="btn-sm" href="./comfyui_workflows/01_sdxl_manhua_t2i_ui.json" target="_blank" rel="noopener">⬇️ 下载画布版 (_ui.json)</a>
+            <a class="btn-sm" href="./comfyui_workflows/01_sdxl_manhua_t2i_api.json" target="_blank" rel="noopener">⬇️ API版</a>
+          </div>
+        </div>
+        <div class="wf-card">
+          <div class="card-title">02 · Flux.1 Dev 高清漫剧分镜工作流</div>
+          <p style="font-size:13px;color:var(--muted);">适用于本地 Flux.1 Dev (FP8/GGUF) 环境。对双人复杂对手戏构图与屏幕英文 UI 文字拼写还原度极佳。</p>
+          <div class="card-actions">
+            <a class="btn-sm" href="./comfyui_workflows/02_flux1_dev_manhua_t2i_ui.json" target="_blank" rel="noopener">⬇️ 下载画布版 (_ui.json)</a>
+            <a class="btn-sm" href="./comfyui_workflows/02_flux1_dev_manhua_t2i_api.json" target="_blank" rel="noopener">⬇️ API版</a>
+          </div>
+        </div>
+        <div class="wf-card">
+          <div class="card-title">03 · Wan 2.1 原生图生视频 (I2V) 动态工作流</div>
+          <p style="font-size:13px;color:var(--muted);">基于 ComfyUI 官方内置 WanImageToVideo 节点（81帧 = 5秒@16fps，ModelSamplingSD3 shift=8.0），拖入已生成的 18 张首帧图即可直出动态视频。</p>
+          <div class="card-actions">
+            <a class="btn-sm" href="./comfyui_workflows/03_wan21_manhua_i2v_ui.json" target="_blank" rel="noopener">⬇️ 下载画布版 (_ui.json)</a>
+            <a class="btn-sm" href="./comfyui_workflows/03_wan21_manhua_i2v_api.json" target="_blank" rel="noopener">⬇️ API版</a>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec-title">📄 批量提示词与配音台词文件</h2>
+      <div class="card-actions" style="margin-bottom:24px;">
+        <a class="btn-sm" href="./prompts/asset_manifest.json" target="_blank" rel="noopener">📋 asset_manifest.json (全局索引)</a>
+        <a class="btn-sm" href="./prompts/ep01_i2v_prompts_wan21_zh.txt" target="_blank" rel="noopener">🎞️ 第1集 Wan2.1 运镜词 (.txt)</a>
+        <a class="btn-sm" href="./prompts/ep02_i2v_prompts_wan21_zh.txt" target="_blank" rel="noopener">🎞️ 第2集 Wan2.1 运镜词 (.txt)</a>
+        <a class="btn-sm" href="./prompts/ep01_tts_dialogue.csv" target="_blank" rel="noopener">🎙️ 第1集 CosyVoice 配音表 (.csv)</a>
+        <a class="btn-sm" href="./prompts/ep02_tts_dialogue.csv" target="_blank" rel="noopener">🎙️ 第2集 CosyVoice 配音表 (.csv)</a>
+      </div>
+
+      <h2 class="sec-title">🚀 本地终端一键自动上传 30 张资产 & 批量排队跑视频</h2>
+      <div class="cli-block"># 解压资产包并进入目录后，确保本地 ComfyUI (http://127.0.0.1:8188) 已启动：
+
+# 1. 一键将全部 30 张高清 PNG（角色/场景/道具 + 第1集12镜首帧 + 第2集6镜首帧）上传进 ComfyUI input 目录
+python3 scripts/run_comfy_batch.py --upload-assets
+
+# 2. 直接调用本地 Wan 2.1 I2V 自动将第1集+第2集全部 18 张首帧批量生成动态视频！
+python3 scripts/run_comfy_batch.py --mode wan-i2v --episode all --aspect 16:9
+
+# （也可以单独跑第1集或第2集）
+python3 scripts/run_comfy_batch.py --mode wan-i2v --episode 1 --aspect 16:9</div>
+    </section>
+
+    <section id="tab-bible" class="tab-panel">
+      <h2 class="sec-title">📖 第一季（1～10集）商业爽点分集规划 <span class="sec-sub">完整剧本详见 docs/01_project_bible.md 与 03_ep01_ep03_full_script.md</span></h2>
+      <div class="ep-grid">
+        <div class="ep-card"><h4>第1集：封店之夜，重回2018黄金时代</h4><p>300万美金冻结遭合伙人赵凯背刺，林默重生回2018深圳城中村单间，当场撕毁协议踢走白眼狼，锁定超前两年的蓝海王炸“无叶挂颈风扇”，截胡天才女设计师苏晚。</p></div>
+        <div class="ep-card"><h4>第2集：截胡爆款专利，赵凯当场傻眼</h4><p>72小时极限改模防卷发风道，同步递交美国外观专利与 Transparency 透明计划防伪码。眼红的赵凯借高利贷抄公模准备零点跟卖摘桃子，十秒侵权封店全军覆没！</p></div>
+        <div class="ep-card"><h4>第3集：Prime Day 零点核爆，登顶 Best Seller</h4><p>面对天盛跨境五倍广告竞价围剿，林默提前布局的北美测评博主矩阵同日爆火，A9自然排名火箭蹿升，单日狂揽45万美金加冕橙色 #1 Best Seller 王冠！</p></div>
+        <div class="ep-card"><h4>第4集：一星差评围剿？反手送你上头条</h4><p>恶霸大卖“天盛跨境”连刷50条恶意一星差评。林默调出黑产买手库铁证直通西雅图欺诈调查组，一夜洗清差评并反手端掉对方三个主力现金牛店铺。</p></div>
+        <div class="ep-card"><h4>第5集：VC巨蟒半夜改类目，将计就计</h4><p>对手凌晨三点动用高权 VC 账号恶意篡改林默爆款类目。林默凭借独立站引流稳住盘面，并用 API 监控铁证直接废掉天盛唯一一张百万级 VC 王牌号。</p></div>
+        <div class="ep-card"><h4>第6集：东莞供应链断供危机，全资入股模具厂</h4><p>旺季遭恶意双倍包产断供，林默携百万美金回款直奔东莞救下苏晚父亲精密注塑厂，签下排他协议，彻底打通“研发+私模制造+品牌出海”铁三角。</p></div>
+        <div class="ep-card"><h4>第7集：黑五前哨战：家居类目连环爆款</h4><p>从单品爆款升级为矩阵式产品线，智能感应氛围灯与便携咖啡机连环冲入类目前三，团队从坂田出租屋正式入驻南山科技园海景写字楼。</p></div>
+        <div class="ep-card"><h4>第8集：拉斯维加斯 CES 展，正面碾压前世仇敌</h4><p>林默与苏晚惊艳亮相美国 CES 展斩获北美线下商超百万级订单；企图拿山寨货混展的赵凯被美国海关知识产权执法当场清退，身败名裂。</p></div>
+        <div class="ep-card"><h4>第9集：资本围猎与对赌局，不做别人的嫁衣</h4><p>前世做空林默的并购基金携苛刻对赌协议上门，林默当众拆穿回购陷阱撕毁条款，宣布启动中国出海品牌全球全渠道独立IPO计划。</p></div>
+        <div class="ep-card"><h4>第10集：亿级出海帝国，属于中国品牌的王冠</h4><p>黑五网一零点钟声敲响，全球五大智能海外仓全速运转，年 GMV 正式突破一亿美金！背刺者锒铛入狱，林默与苏晚并肩俯瞰点亮全球的 Best Seller 版图。</p></div>
+      </div>
+    </section>
+  </div>
+
+  <div id="lightbox" class="lightbox" onclick="this.classList.remove('open')">
+    <img id="lightbox-img" src="" alt="Preview" />
+  </div>
+
+  <script>
+    const MANIFEST = {
+  "project": {
+    "id": "rebirth-amazon-manhua-s01",
+    "title_zh": "重生之我在做亚马逊",
+    "title_en": "Reborn: My Amazon Empire",
+    "genre": "都市重生 / 跨境电商商战 / 逆袭爽剧",
+    "style_anchor_en": "polished modern Korean-Chinese urban webtoon manhua illustration style, crisp clean dark lineart, refined anime cel-shading with cinematic rim lighting, expressive facial details, rich color grading, high detail, masterpiece, no watermark",
+    "negative_prompt_en": "photorealistic, 3d render, CGI, blurry, lowres, bad anatomy, bad hands, extra fingers, fused fingers, deformed face, cross-eyed, messy sketch lines, monochrome, grayscale, watermark, signature, garbled text, split screen, grid layout, comic panels border",
+    "wan21_negative_zh": "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+    "recommended_resolutions": {
+      "vertical_9_16_sdxl_flux": {
+        "width": 768,
+        "height": 1344
+      },
+      "horizontal_16_9_sdxl_flux": {
+        "width": 1344,
+        "height": 768
+      },
+      "vertical_9_16_wan21_480p": {
+        "width": 480,
+        "height": 832
+      },
+      "horizontal_16_9_wan21_480p": {
+        "width": 832,
+        "height": 480
+      },
+      "vertical_9_16_wan21_720p": {
+        "width": 720,
+        "height": 1280
+      },
+      "horizontal_16_9_wan21_720p": {
+        "width": 1280,
+        "height": 720
+      }
+    }
+  },
+  "characters": [
+    {
+      "id": "char_01_lin_mo_casual",
+      "name": "林默（2018创业卫衣造型）",
+      "role": "男主 · 重生跨境操盘手",
+      "file": "assets/characters/char_01_lin_mo_casual.png",
+      "generated": true,
+      "voice_profile": "青年男声·沉稳磁性果决",
+      "trigger_prompt_en": "Lin Mo, a handsome 24-year-old Chinese young man, neat tousled jet-black short hair with slight forehead bangs, sharp determined dark eyes, defined jawline, wearing a dark charcoal-gray zip-up hoodie layered over a crisp white crew-neck t-shirt, black smartwatch on left wrist",
+      "trigger_prompt_zh": "24岁清隽帅气的中国都市青年林默，利落黑色碎发带微斜刘海，眼神锐利果决，身穿深炭灰色拉链连帽卫衣内搭纯白圆领T恤，左腕戴黑色智能手表"
+    },
+    {
+      "id": "char_02_lin_mo_ceo_suit",
+      "name": "林默（大卖CEO西装造型）",
+      "role": "男主 · 前世/后期亿级大卖总裁",
+      "file": "assets/characters/char_02_lin_mo_ceo_suit.png",
+      "generated": true,
+      "voice_profile": "青年男声·低沉威严领袖感",
+      "trigger_prompt_en": "Lin Mo, a handsome 24-year-old Chinese young man, neat tousled jet-black short hair with slight forehead bangs, sharp determined dark eyes, defined jawline, wearing a tailored midnight-navy business suit jacket over a crisp white dress shirt with top collar button open and no tie, silver luxury wristwatch",
+      "trigger_prompt_zh": "林默身穿剪裁合体的深海蓝修身西装外套，内搭解开第一颗领扣的白衬衫，腕戴银色机械腕表，散发沉稳强大的商业领袖气场"
+    },
+    {
+      "id": "char_03_su_wan_designer",
+      "name": "苏晚（工业设计师造型）",
+      "role": "女主 · 天才工业设计师 & 供应链合伙人",
+      "file": "assets/characters/char_03_su_wan_designer.png",
+      "generated": true,
+      "voice_profile": "青年女声·清亮知性干练",
+      "trigger_prompt_en": "Su Wan, an attractive 23-year-old Chinese young woman industrial designer, sleek glossy black hair tied in a high ponytail with wispy side strands framing her face, bright intelligent dark brown eyes, elegant poised expression, wearing a cream-white knit cardigan over a light blue collared blouse with a silver lanyard badge",
+      "trigger_prompt_zh": "23岁明艳知性的中国年轻女设计师苏晚，乌黑长发束成利落高马尾，两侧垂落微卷碎发，眼眸清亮聪慧，身穿米白色针织开衫内搭浅蓝翻领衬衫，佩戴银灰色工牌挂绳"
+    },
+    {
+      "id": "char_04_zhao_kai_villain",
+      "name": "赵凯（反派背刺合伙人）",
+      "role": "核心反派 · 黑心合伙人 & 恶意跟卖头目",
+      "file": "assets/characters/char_04_zhao_kai_villain.png",
+      "generated": true,
+      "voice_profile": "青年男声·斯文阴鸷冷笑",
+      "trigger_prompt_en": "Zhao Kai, a cunning 28-year-old Chinese businessman villain, slicked-back dark hair with a few loose forehead strands, thin gold-rimmed rectangular glasses reflecting cold light, narrow calculating eyes, arrogant scheming smirk, wearing a dark burgundy dress shirt with a tailored black vest and black tie",
+      "trigger_prompt_zh": "28岁斯文败类反派赵凯，黑色背头散落几缕碎发，戴细框金丝眼镜，眼神狭长阴鸷，嘴角挂着算计冷笑，身穿酒红色衬衫搭配黑色修身马甲与黑领带"
+    },
+    {
+      "id": "char_05_chen_pang_warehouse",
+      "name": "陈胖（死党仓储总管）",
+      "role": "男配 · 华强北铁杆兄弟 & FBA发货狂魔",
+      "file": "assets/characters/char_05_chen_pang_warehouse.png",
+      "generated": true,
+      "voice_profile": "青年男声·洪亮憨厚热血",
+      "trigger_prompt_en": "Chen Pang, a loyal cheerful 25-year-old chubby Chinese young man, round friendly face, short spiky black crew-cut hair, thick expressive eyebrows, warm energetic grin, wearing a casual navy-blue polo shirt and dark gray trousers with a packing tape dispenser clipped at his belt",
+      "trigger_prompt_zh": "25岁壮实圆脸青年陈胖，黑色精神寸头，浓眉大眼笑容憨厚热血，身穿藏青色Polo衫配深灰长裤，腰间别着打包封箱胶带切割器"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene_01_bankrupt_office_rain",
+      "name": "前世2026深圳暴雨封店办公室",
+      "mood": "冷蓝暴雨霓虹 + 刺眼封店红光",
+      "file": "assets/scenes/scene_01_bankrupt_office_rain.png",
+      "generated": true,
+      "scene_prompt_en": "cluttered e-commerce office in Shenzhen late at night during a heavy thunderstorm, rain streaking down floor-to-ceiling glass windows overlooking blurry neon city skyscrapers, dual-monitor computer desk glowing with ominous crimson warning light, stacks of returned cardboard shipping boxes and scattered invoices on the floor, cold blue and red dramatic lighting"
+    },
+    {
+      "id": "scene_02_2018_dorm_studio",
+      "name": "重生2018深圳坂田阳光创业小单间",
+      "mood": "清晨暖金阳光 + 励志创业氛围",
+      "file": "assets/scenes/scene_02_2018_dorm_studio.png",
+      "generated": true,
+      "scene_prompt_en": "cozy nostalgic 2018 Shenzhen startup apartment studio bathed in warm golden early morning sunlight streaming through an open window, wooden desk with dual computer monitors, metal storage shelves holding electronics prototypes, rolls of packing tape, thermal shipping label printer, and brown corrugated e-commerce shipping cartons"
+    },
+    {
+      "id": "scene_03_shenzhen_cafe",
+      "name": "深圳南山科技园阳光精品咖啡馆",
+      "mood": "午后通透暖光 + 都市商务感",
+      "file": "assets/scenes/scene_03_shenzhen_cafe.png",
+      "generated": true,
+      "scene_prompt_en": "bright stylish modern cafe in Shenzhen tech park during sunny afternoon, warm sunlight filtering through indoor green plants and large glass windows overlooking modern glass office towers, clean wooden booth table with ceramic coffee cups"
+    },
+    {
+      "id": "scene_04_fba_smart_warehouse",
+      "name": "现代化跨境FBA智能物流海外仓",
+      "mood": "高挑天窗丁达尔金光 + 商业帝国宏大纵深",
+      "file": "assets/scenes/scene_04_fba_smart_warehouse.png",
+      "generated": true,
+      "scene_prompt_en": "massive modern cross-border e-commerce fulfillment warehouse interior, high industrial ceiling with golden sunlight beams streaming through skylights, automated conveyor belts carrying thousands of neatly sealed brown shipping boxes with barcode labels, towering storage racks filled with inventory pallets"
+    }
+  ],
+  "props": [
+    {
+      "id": "prop_01_account_banned_screen",
+      "name": "卖家后台 ACCOUNT SUSPENDED 封店红屏",
+      "file": "assets/props/prop_01_account_banned_screen.png",
+      "generated": true,
+      "prop_prompt_en": "Single standalone anime prop close-up illustration of a modern widescreen desktop computer monitor on a dark desk at night, screen glowing crimson red displaying an e-commerce seller central ACCOUNT SUSPENDED warning alert triangle icon and a plummeting zero-sales bar chart, moody dark blue and red lighting, polished modern Korean-Chinese urban webtoon manhua style, crisp clean linework"
+    },
+    {
+      "id": "prop_02_neck_fan_blueprint",
+      "name": "2018超前蓝海爆款：无叶挂颈风扇工程手稿与样机",
+      "file": "assets/props/prop_02_neck_fan_blueprint.png",
+      "generated": true,
+      "prop_prompt_en": "Single standalone anime prop close-up illustration on a clean sunlit wooden designer desk, showing a sleek futuristic matte-white bladeless wearable neck fan prototype resting beside an industrial design sketch pad with clean blue technical wireframe drawings and airflow arrows, a digital caliper and stylus pen nearby, warm studio lighting, polished modern Korean-Chinese urban webtoon manhua style, crisp lineart, detailed cel-shading"
+    },
+    {
+      "id": "prop_03_bestseller_badge_chart",
+      "name": "#1 Best Seller 橙色王冠勋章与爆单曲线屏",
+      "file": "assets/props/prop_03_bestseller_badge_chart.png",
+      "generated": true,
+      "prop_prompt_en": "Single standalone anime prop close-up illustration of an ultrawide computer monitor glowing with triumphant golden and vibrant orange light, displaying an e-commerce analytics dashboard with a skyrocketing golden revenue curve shooting upward and a gleaming orange number-1 Best Seller ribbon crown badge icon at the top, celebratory warm lighting, polished modern Korean-Chinese urban webtoon manhua style, crisp lineart"
+    }
+  ],
+  "episodes": [
+    {
+      "episode": 1,
+      "title": "封店之夜，重回2018黄金时代",
+      "estimated_duration_sec": 95,
+      "shots": [
+        {
+          "shot_id": "ep01_shot01",
+          "seq": 1,
+          "title": "猩红死刑判决",
+          "duration_sec": 7,
+          "framing": "大特写拉至中景 (ECU -> MS)",
+          "camera_motion": "Slow Pull-Back",
+          "character_refs": [],
+          "scene_ref": "scene_01_bankrupt_office_rain",
+          "prop_ref": "prop_01_account_banned_screen",
+          "t2i_prompt_en": "Dramatic anime close-up of a widescreen desktop monitor glowing bright crimson red in a dark rainy Shenzhen office at night, screen displaying red warning triangle and ACCOUNT SUSPENDED alert with zero sales chart, rain streaking down glass window in background, cold blue and blood-red lighting, polished modern Korean-Chinese urban webtoon manhua illustration style, crisp dark lineart, refined anime cel-shading",
+          "t2i_prompt_zh": "深夜暴雨深圳办公室，宽屏显示器泛着刺眼血红光芒特写，屏幕显示红色三角警告图标与ACCOUNT SUSPENDED封店通知及归零销量图，背景落地窗雨水滑落，冷蓝与血红戏剧光影，精致韩漫国漫都市彩漫风",
+          "i2v_motion_prompt_en": "Slow dramatic camera pull-back from the glowing red computer screen, red warning icon pulsing ominously, heavy raindrops sliding down the dark office window behind, cinematic moody lighting.",
+          "i2v_motion_prompt_zh": "镜头从泛着红光的显示器缓缓向后拉远，红色警告标志微微闪烁，背景玻璃窗上暴雨滑落，电影感冷峻光影。",
+          "speaker": "林默（旁白）",
+          "voice_emotion": "沙哑绝望、低沉压抑",
+          "dialogue": "做亚马逊第八年，Prime Day大促前夜，我倾注全部心血的三个主力店铺，全死了。",
+          "sfx_bgm": "刺耳系统警报声 + 炸雷暴雨声，低沉大提琴弦乐起",
+          "keyframe_file": "assets/keyframes_ep01/ep01_shot01.png",
+          "keyframe_generated": true
+        },
+        {
+          "shot_id": "ep01_shot02",
+          "seq": 2,
+          "title": "窒息的资金冻结",
+          "duration_sec": 7,
+          "framing": "中近景 (MCU)",
+          "camera_motion": "Slow Push-In",
+          "character_refs": [
+            "char_02_lin_mo_ceo_suit"
+          ],
+          "scene_ref": "scene_01_bankrupt_office_rain",
+          "prop_ref": null,
+          "t2i_prompt_en": "Lin Mo, a handsome 24-year-old Chinese young man with neat tousled jet-black short hair, wearing a crumpled midnight-navy suit jacket and unbuttoned white dress shirt, sitting slumped in front of dual monitors in a dark rainy office, crimson screen light illuminating his pale shocked face and bloodshot eyes, hands gripping crumpled supplier debt notices on the desk, polished modern Korean-Chinese urban webtoon manhua illustration style, crisp dark lineart, dramatic cel-shading",
+          "t2i_prompt_zh": "林默身穿凌乱的深海蓝西装与解开领扣的白衬衫，瘫坐在昏暗暴雨办公室双屏电脑前，屏幕血红光芒映照他苍白震惊的脸与发红眼眶，双手死死攥着供应商催款单，精致韩漫商战风",
+          "i2v_motion_prompt_en": "Slow push-in toward the young man's face illuminated by flickering red monitor light, his fingers trembling slightly as he clenches the paper invoice, chest heaving with ragged breath, rain shadows moving across his face.",
+          "i2v_motion_prompt_zh": "镜头缓慢推近被屏幕红光映照的男主脸庞，他攥着催款单的手指微微颤抖，胸口剧烈起伏，窗外雨影掠过侧脸。",
+          "speaker": "林默",
+          "voice_emotion": "颤声咬牙、难以置信",
+          "dialogue": "三百万美金货款全部冻结……十万件海外仓备货变成废铁，触发二审的关联刷单账号，怎么可能从公司内网登出去？！",
+          "sfx_bgm": "急促呼吸声 + 纸张捏皱声",
+          "keyframe_file": "assets/keyframes_ep01/ep01_shot02.png",
+          "keyframe_generated": true
+        },
+        {
+          "shot_id": "ep01_shot03",
+          "seq": 3,
+          "title": "玻璃门外的背刺冷笑",
+          "duration_sec": 9,
+          "framing": "越肩斜角构图 (Dutch Angle MS)",
+          "camera_motion": "Dutch Pan",
+          "character_refs": [
+            "char_04_zhao_kai_villain"
+          ],
+          "scene_ref": "scene_01_bankrupt_office_rain",
+          "prop_ref": null,
+          "t2i_prompt_en": "Zhao Kai, a cunning 28-year-old Chinese businessman villain with slicked-back dark hair and thin gold-rimmed rectangular glasses reflecting cold light, wearing a dark burgundy dress shirt and tailored black vest, standing at the glass office doorway holding a leather briefcase and a signed patent transfer folder, looking down with an arrogant scheming smirk, dark rainy neon office corridor, polished modern Korean-Chinese urban business webtoon manhua style, crisp sharp lineart",
+          "t2i_prompt_zh": "反派赵凯梳着背头戴金丝眼镜，身穿酒红衬衫与黑色马甲，站在办公室玻璃门口手拿公文包与专利转让夹，居高临下露出阴险算计的冷笑，昏暗霓虹走廊光影，精致韩漫风",
+          "i2v_motion_prompt_en": "Subtle Dutch-angle camera pan, the villain with gold-rimmed glasses pushes up his glasses with one finger, smirks coldly while tapping the folder in his hand, then turns away into the hallway shadows.",
+          "i2v_motion_prompt_zh": "微斜角镜头平移，金丝眼镜反派用手指推了推眼镜，冷笑着拍了拍手中的专利文件夹，转身走入走廊阴影。",
+          "speaker": "赵凯",
+          "voice_emotion": "轻蔑虚伪、阴冷得意",
+          "dialogue": "林默，别查了。你的核心外观专利和供应商名单，昨天就已经转到我新注册的香港主体名下了。这三千万的工厂欠款，你慢慢背吧。",
+          "sfx_bgm": "皮鞋清脆远去脚步声 + 阴冷弦乐滑音",
+          "keyframe_file": "assets/keyframes_ep01/ep01_shot03.png",
+          "keyframe_generated": true
+        },
+        {
+          "shot_id": "ep01_shot04",
+          "seq": 4,
+          "title": "暴雨天台的不甘誓言",
+          "duration_sec": 7,
+          "framing": "仰拍半身特写 (Low-Angle CU)",
+          "camera_motion": "Fast Zoom-In to Eyes",
+          "character_refs": [
+            "char_02_lin_mo_ceo_suit"
+          ],
+          "scene_ref": null,
+          "prop_ref": null,
+          "t2i_prompt_en": "Dramatic low-angle anime shot of Lin Mo standing in pouring rain on a high-rise skyscraper rooftop at night, soaked tousled black hair clinging to his forehead, soaked midnight-navy suit, bright lightning bolt illuminating the stormy sky behind him, eyes burning with fierce defiance and regret, neon Shenzhen skyline blurred below, polished modern Korean-Chinese urban webtoon manhua style, intense cinematic cel-shading",
+          "t2i_prompt_zh": "戏剧性低角度仰拍，林默夜立摩天大楼天台倾盆大雨中，湿透黑发贴在额前，身后闪电撕裂夜空，双眸燃烧着极度不甘与决绝，精致韩漫电影感光影",
+          "i2v_motion_prompt_en": "Heavy rain pouring down in slow motion, wind whipping his soaked suit jacket, bright white lightning flashes across the dark storm clouds illuminating his fierce eyes, camera fast zoom into his pupil.",
+          "i2v_motion_prompt_zh": "慢动作倾盆大雨落下，狂风吹动湿透的西装衣角，惨白闪电划破乌云照亮他决绝的双眼，镜头急速推进瞳孔。",
+          "speaker": "林默（内心嘶吼）",
+          "voice_emotion": "悲愤爆发、不甘怒吼",
+          "dialogue": "我亲手带出来的兄弟，竟拿我当垫脚石！如果能重来一次——！",
+          "sfx_bgm": "惊雷炸响 + 心跳骤停 + 时钟倒转空灵音效",
+          "keyframe_file": "assets/keyframes_ep01/ep01_shot04.png",
+          "keyframe_generated": true
+        },
+        {
+          "shot_id": "ep01_shot05",
+          "seq": 5,
+          "title": "猛然惊醒，2018的金色清晨",
+          "duration_sec": 8,
+          "framing": "中景 (MS)",
+          "camera_motion": "Whip Tilt-Up & Settle",
+          "character_refs": [
+            "char_01_lin_mo_casual"
+          ],
+          "scene_ref": "scene_02_2018_dorm_studio",
+          "prop_ref": null,
+          "t2i_prompt_en": "Lin Mo, a handsome 24-year-old Chinese young man in dark charcoal-gray zip-up hoodie over white t-shirt, gasping awake upright from a wooden computer desk in a cozy sunlit 2018 Shenzhen startup apartment studio, warm golden morning sunlight streaming through open window onto metal shelves and brown FBA shipping boxes, looking in shock at his glowing smartphone in hand, polished modern Korean-Chinese urban webtoon manhua illustration style, crisp lineart, vibrant warm cel-shading",
+          "t2i_prompt_zh": "身穿深灰连帽卫衣配白T恤的青年林默从木质电脑桌前猛然惊醒坐起，清晨暖金阳光洒满2018深圳创业单间、货架与FBA纸箱，他震惊地低头看着手中亮起的手机屏幕，精致韩漫温暖光影",
+          "i2v_motion_prompt_en": "The young man in dark hoodie jolts upright from the desk breathing heavily, warm golden dust motes floating in the morning sunbeams, he raises his smartphone and his shocked eyes widen with realization and joy.",
+          "i2v_motion_prompt_zh": "深灰卫衣青年从桌前猛然惊醒坐起大口喘气，清晨阳光中金色微尘浮动，他举起手机瞳孔骤缩随即转为狂喜。",
+          "speaker": "林默",
+          "voice_emotion": "大口喘息、震惊转为狂喜振奋",
+          "dialogue": "2018年5月10日？！坂田城中村单间……我真的回到了八年前，跨境电商最疯狂的黄金红利期！",
+          "sfx_bgm": "音乐陡然转为明亮燃向电吉他与清脆鸟鸣",
+          "keyframe_file": "assets/keyframes_ep01/ep01_shot05.png",
+          "keyframe_generated": true
+        },
+        {
+          "shot_id": "ep01_shot06",
+          "seq": 6,
+          "title": "当场手撕合伙协议踢走赵凯",
+          "duration_sec": 8,
+          "framing": "双人对峙中景 (Two-Shot MS)",
+          "camera_motion": "Dynamic Slow Track",
+          "character_refs": [
+            "char_01_lin_mo_casual",
+            "char_04_zhao_kai_villain"
+          ],
+          "scene_ref": "scene_02_2018_dorm_studio",
+          "prop_ref": null,
+          "t2i_prompt_en": "Two-shot confrontation inside the sunlit 2018 Shenzhen startup apartment studio: on the left, Lin Mo in dark charcoal hoodie stands tall with cold piercing eyes tearing a paper partnership contract cleanly in half; on the right, Zhao Kai in burgundy dress shirt and gold-rimmed glasses looks stunned and embarrassed with hands held out awkwardly, white paper scraps in air, polished modern Korean-Chinese urban webtoon manhua style, crisp lineart",
+          "t2i_prompt_zh": "阳光明媚的2018创业单间内双人对峙：左侧身穿深灰卫衣的林默眼神冰冷凌厉，双手将纸质合伙协议一撕为二；右侧酒红衬衫戴金丝眼镜的赵凯僵在原地满脸错愕尴尬，精致韩漫风",
+          "i2v_motion_prompt_en": "Lin Mo rips the paper contract cleanly in half, white paper scraps fluttering downward in the sunlight, while the man in gold-rimmed glasses steps back in disbelief with a twitching expression.",
+          "i2v_motion_prompt_zh": "林默干脆利落地将合同撕成两半，白色碎纸在阳光中飘落，金丝眼镜男错愕后退半步嘴角抽搐。",
+          "speaker": "林默",
+          "voice_emotion": "冷冽干脆、霸气决绝",
+          "dialogue": "指尖陀螺下周就会全网专利侵权封杀。赵凯，合伙取消，现在带上你的东西，滚出我的工作室。",
+          "sfx_bgm": "清脆撕纸声 + 爽感重低音卡点",
+          "keyframe_file": "assets/keyframes_ep01/ep01_shot06.png",
+          "keyframe_generated": true
+        },
+        {
+          "shot_id": "ep01_shot07",
+          "seq": 7,
+          "title": "铁杆死党陈胖冲门报到",
+          "duration_sec": 7,
+          "framing": "中近景 (MS)",
+          "camera_motion": "Slight Handheld Bounce",
+          "character_refs": [
+            "char_05_chen_pang_warehouse"
+          ],
+          "scene_ref": "scene_02_2018_dorm_studio",
+          "prop_ref": null,
+          "t2i_prompt_en": "Chen Pang, a loyal cheerful 25-year-old chubby Chinese young man with short spiky black crew-cut hair in navy-blue polo shirt with packing tape dispenser clipped on belt, bursting happily through the wooden door of the sunlit 2018 startup studio carrying breakfast bags, wide energetic grin, warm morning light, polished modern Korean-Chinese urban webtoon manhua style, crisp lineart",
+          "t2i_prompt_zh": "25岁寸头壮实青年陈胖身穿藏青Polo衫、腰别封箱胶带枪，提着早餐袋兴冲冲推开阳光创业单间木门，满脸憨厚热血笑容，精致韩漫风",
+          "i2v_motion_prompt_en": "The cheerful chubby young man pushes open the studio door energetically, lifting up breakfast bags with a big warm grin, lively animated movement.",
+          "i2v_motion_prompt_zh": "壮实寸头青年活力满满推门而入，高高举起手里的早餐袋咧嘴大笑，画面富有生机活力。",
+          "speaker": "陈胖",
+          "voice_emotion": "洪亮憨厚、充满干劲",
+          "dialogue": "默哥！赵凯那小子怎么灰溜溜跑了？不管他，三十万启动资金还在，咱今年Prime Day到底干啥品？！",
+          "sfx_bgm": "轻快开门声 + 活泼节奏鼓点",
+          "keyframe_file": "assets/keyframes_ep01/ep01_shot07.png",
+          "keyframe_generated": true
+        },
+        {
+          "shot_id": "ep01_shot08",
+          "seq": 8,
+          "title": "锁定超级蓝海：涡轮无叶挂颈风扇",
+          "duration_sec": 9,
+          "framing": "侧面近景推特写 (Close-up Orbit)",
+          "camera_motion": "Smooth Orbit Right",
+          "character_refs": [
+            "char_01_lin_mo_casual"
+          ],
+          "scene_ref": "scene_02_2018_dorm_studio",
+          "prop_ref": "prop_02_neck_fan_blueprint",
+          "t2i_prompt_en": "Lin Mo in dark charcoal hoodie sitting focused at dual computer monitors in the sunlit studio, confidently sketching a sleek wearable bladeless neck fan concept on a design pad while monitors show blue-ocean search trend charts climbing upward, warm sunlight catching his confident half-smile, polished modern Korean-Chinese urban webtoon manhua style, crisp lineart, cinematic lighting",
+          "t2i_prompt_zh": "林默身穿深灰卫衣坐在阳光工作室双屏电脑前，手握画笔在手绘板上勾勒流线型无叶挂颈风扇草图，屏幕显示攀升的蓝海搜索趋势图，嘴角扬起自信微笑，精致韩漫风",
+          "i2v_motion_prompt_en": "Smooth camera orbit around Lin Mo as his pen swiftly finishes drawing the sleek curved neck fan silhouette, blue light from the analytics screen reflecting in his sharp confident eyes.",
+          "i2v_motion_prompt_zh": "镜头围绕林默平滑环绕推进，他手中画笔流畅勾勒出无叶挂颈风扇轮廓，数据屏幕蓝光映亮他自信锐利的眼眸。",
+          "speaker": "林默（内心独白）",
+          "voice_emotion": "沉着笃定、智珠在握",
+          "dialogue": "2018年夏天，美国户外风扇全是夹头发的旧式扇叶款。还有两年才会爆火全球的涡轮无叶挂颈风扇，现在是一片零竞争的超级蓝海！",
+          "sfx_bgm": "唰唰画笔声 + 科技感数据流音效",
+          "keyframe_file": "assets/keyframes_ep01/ep01_shot08.png",
+          "keyframe_generated": true
+        },
+        {
+          "shot_id": "ep01_shot09",
+          "seq": 9,
+          "title": "南山咖啡馆，截胡天才设计师苏晚",
+          "duration_sec": 9,
+          "framing": "双人卡座对视中景 (Two-Shot Across Table)",
+          "camera_motion": "Gentle Rack Focus & Push",
+          "character_refs": [
+            "char_01_lin_mo_casual",
+            "char_03_su_wan_designer"
+          ],
+          "scene_ref": "scene_03_shenzhen_cafe",
+          "prop_ref": "prop_02_neck_fan_blueprint",
+          "t2i_prompt_en": "Inside a bright sunny modern Shenzhen tech park cafe with green plants and glass windows: Lin Mo in dark charcoal hoodie sits across a wooden booth table sliding a technical airflow blueprint sketch toward Su Wan; Su Wan, an attractive 23-year-old Chinese woman industrial designer with sleek glossy black high ponytail in cream-white knit cardigan over light blue blouse, holds the blueprint with widened eyes full of amazement, warm afternoon sunlight, polished modern Korean-Chinese urban webtoon manhua style",
+          "t2i_prompt_zh": "阳光通透的深圳科技园精品咖啡馆木质卡座，林默将一份涡轮风道改良蓝图推向对面；高马尾米白针织衫女设计师苏晚捧着图纸美眸睁大满是惊艳，午后暖阳绿植光影，精致韩漫风",
+          "i2v_motion_prompt_en": "Lin Mo slides the blueprint across the sunlit wooden table, the young woman with glossy high ponytail picks it up, her eyes widening in astonishment as she looks up at him, warm golden bokeh particles.",
+          "i2v_motion_prompt_zh": "林默将工程蓝图推过洒满阳光的木桌，高马尾女设计师拿起图纸，眼中闪过惊艳光芒抬头看向林默，金色光斑微动。",
+          "speaker": "苏晚 / 林默",
+          "voice_emotion": "苏晚惊讶赞叹 → 林默自信邀约",
+          "dialogue": "苏晚：双涡轮聚风道加防卷发微孔……这正好解决了我卡了半年的结构痛点！林默：我出全额模具费给你十五个点干股，美国外观专利今天同步递交，敢不敢跟我造个类目第一？",
+          "sfx_bgm": "清雅咖啡馆钢琴背景音转昂扬弦乐",
+          "keyframe_file": "assets/keyframes_ep01/ep01_shot09.png",
+          "keyframe_generated": true
+        },
+        {
+          "shot_id": "ep01_shot10",
+          "seq": 10,
+          "title": "72小时极限打样与FBA头程抢发",
+          "duration_sec": 8,
+          "framing": "中全景动态群像 (Medium Wide Shot)",
+          "camera_motion": "Dynamic Lateral Tracking",
+          "character_refs": [
+            "char_05_chen_pang_warehouse",
+            "char_03_su_wan_designer"
+          ],
+          "scene_ref": "scene_02_2018_dorm_studio",
+          "prop_ref": null,
+          "t2i_prompt_en": "Energetic single scene inside the 2018 Shenzhen startup studio: Chen Pang in navy polo shirt excitedly sealing stacked brown FBA shipping cartons with his tape dispenser while a Zebra thermal printer spits out barcode labels, and Su Wan in cream cardigan with high ponytail inspects a sleek matte-white bladeless neck fan sample under warm lamp light, polished modern Korean-Chinese urban webtoon manhua style, crisp lineart",
+          "t2i_prompt_zh": "热火朝天的创业单间内：陈胖用封箱器飞快打包摞起的FBA棕色纸箱，热敏打印机吐出条码面单，旁侧高马尾苏晚手持纯白无叶挂颈风扇样机点头检验，热血暖光，精致韩漫风",
+          "i2v_motion_prompt_en": "Dynamic tracking shot across the busy studio, thermal printer rapidly feeding white barcode labels, Chen Pang swiftly sealing a carton with packing tape while Su Wan nods approvingly holding the white neck fan prototype.",
+          "i2v_motion_prompt_zh": "横向动态跟拍忙碌的工作室，热敏打印机飞快吐出条码标签，陈胖利落拉胶带封箱，苏晚手持白色挂颈风扇样机满意点头。",
+          "speaker": "陈胖",
+          "voice_emotion": "干劲十足、兴奋高呼",
+          "dialogue": "三千台首批大货全检合格！美森快船头程舱位锁死，准时入仓美西ONT8仓库！",
+          "sfx_bgm": "刺啦封箱胶带声 + 热敏出单声 + 快节奏燃曲",
+          "keyframe_file": "assets/keyframes_ep01/ep01_shot10.png",
+          "keyframe_generated": true
+        },
+        {
+          "shot_id": "ep01_shot11",
+          "seq": 11,
+          "title": "暗处毒蛇：赵凯密谋零点恶意跟卖",
+          "duration_sec": 7,
+          "framing": "暗调面部大特写 (Dark CU)",
+          "camera_motion": "Creeping Push-In",
+          "character_refs": [
+            "char_04_zhao_kai_villain"
+          ],
+          "scene_ref": null,
+          "prop_ref": null,
+          "t2i_prompt_en": "Close-up of villain Zhao Kai in a dimly lit dark room at night, cold blue laptop glow reflecting off his thin gold-rimmed rectangular glasses, staring greedily at a rising e-commerce product listing on screen, holding his phone to his ear with a venomous sneer, dark burgundy shirt and black vest, polished modern Korean-Chinese urban webtoon manhua style, dramatic shadows",
+          "t2i_prompt_zh": "昏暗房间内反派赵凯面部特写，笔记本屏幕幽蓝冷光反射在他的细框金丝眼镜片上，他贪婪盯着飙升的新品链接，举着手机嘴角勾起阴毒冷笑，精致韩漫暗黑光影",
+          "i2v_motion_prompt_en": "Slow push-in on Zhao Kai's glasses reflecting the product screen, his mouth curves into a greedy sneer as he speaks into his smartphone in the cold blue glow.",
+          "i2v_motion_prompt_zh": "镜头缓缓推近反光金丝眼镜，赵凯在幽蓝电脑光下对着手机露出贪婪阴狠的冷笑。",
+          "speaker": "赵凯",
+          "voice_emotion": "阴狠贪婪、幸灾乐祸",
+          "dialogue": "林默那小子的挂颈风扇刚上架三天就冲进新品榜前十？马上找小作坊一比一抄公模，Prime Day零点准时低价跟卖抢他购物车！",
+          "sfx_bgm": "低沉危险合成器暗音",
+          "keyframe_file": "assets/keyframes_ep01/ep01_shot11.png",
+          "keyframe_generated": true
+        },
+        {
+          "shot_id": "ep01_shot12",
+          "seq": 12,
+          "title": "Prime Day前夜，猎手收网定格！",
+          "duration_sec": 9,
+          "framing": "英雄半身回眸定格 (Heroic MCU)",
+          "camera_motion": "Epic Push-In with Golden Lens Flare",
+          "character_refs": [
+            "char_01_lin_mo_casual"
+          ],
+          "scene_ref": "scene_04_fba_smart_warehouse",
+          "prop_ref": "prop_03_bestseller_badge_chart",
+          "t2i_prompt_en": "Triumphant anime shot of Lin Mo in dark charcoal hoodie standing before glowing ultrawide monitors showing skyrocketing golden sales curves and gleaming orange Best Seller crown badge, golden sunrise rays breaking through the window illuminating his sharp eyes and victorious smirk, massive FBA warehouse silhouette vision behind, polished modern Korean-Chinese urban webtoon manhua style, epic rim lighting, masterpiece",
+          "t2i_prompt_zh": "燃向定格画面：林默身穿深灰卫衣立于流光溢彩的超宽屏前，屏幕亮起冲天金色销量曲线与橙色Best Seller王冠徽章，破晓金光洒满侧脸，他回眸露出自信锋利的逆袭微笑，精致韩漫史诗光影",
+          "i2v_motion_prompt_en": "Golden sunrise light flares across the room as orange order notification icons cascade rapidly on the monitor behind him, Lin Mo turns slightly toward the camera with a calm, razor-sharp victorious smile.",
+          "i2v_motion_prompt_zh": "破晓金色炫光掠过画面，身后屏幕橙色出单图标如瀑布飞速跳动，林默微微侧首回眸露出锋利自信的逆袭微笑。",
+          "speaker": "林默（霸气独白）",
+          "voice_emotion": "胸有成竹、燃向王道感",
+          "dialogue": "想跟卖摘桃子？赵凯，这一世我就让你亲眼看看，什么叫专利护城河与降维打击！亚马逊，我林默回来了！",
+          "sfx_bgm": "电音交响推至最高潮卡点收束 + 清脆爆单金币连响！",
+          "keyframe_file": "assets/keyframes_ep01/ep01_shot12.png",
+          "keyframe_generated": true
+        }
+      ]
+    },
+    {
+      "episode": 2,
+      "title": "截胡爆款专利，赵凯当场傻眼",
+      "estimated_duration_sec": 52,
+      "shots": [
+        {
+          "shot_id": "ep02_shot01",
+          "seq": 1,
+          "title": "山寨作坊狂妄叫嚣",
+          "duration_sec": 8,
+          "framing": "中景 (MS)",
+          "camera_motion": "Slow Push-In",
+          "character_refs": [
+            "char_04_zhao_kai_villain"
+          ],
+          "scene_ref": null,
+          "prop_ref": null,
+          "keyframe_file": "assets/keyframes_ep02/ep02_shot01.png",
+          "keyframe_generated": true,
+          "t2i_prompt_en": "Inside a cluttered dimly-lit small electronics copycat assembly workshop stacked with cheap grey plastic knockoff neck fans and cardboard cartons, villain Zhao Kai with slicked-back hair, thin gold-rimmed glasses, burgundy shirt, and black vest stands arrogantly holding up his smartphone showing a group chat while laughing smugly, harsh fluorescent lighting, polished modern Korean-Chinese urban webtoon manhua style, crisp lineart",
+          "t2i_prompt_zh": "昏暗杂乱的山寨小电子厂内堆满廉价灰色塑料山寨挂颈风扇，反派赵凯举着手机卖家群聊天界面得意狂笑，刺眼日光灯管光影，精致韩漫风",
+          "i2v_motion_prompt_en": "Slow push-in toward Zhao Kai laughing arrogantly while waving his smartphone in the cluttered copycat workshop, workers assembling cheap plastic parts in the blurred background.",
+          "i2v_motion_prompt_zh": "镜头推进在杂乱山寨作坊里举着手机得意冷笑的赵凯，背景工人正在组装廉价塑料外壳，灯光冷硬。",
+          "speaker": "赵凯",
+          "voice_emotion": "嚣张嘲讽、小人得志",
+          "dialogue": "林默花十几万开私模纯属冤大头！我找华强北公模作坊三天赶出五千台，成本省一半，今晚零点准时跟卖抢光他的流量！",
+          "sfx_bgm": "嘈杂工厂机器声 + 手机群消息叮咚刷屏声"
+        },
+        {
+          "shot_id": "ep02_shot02",
+          "seq": 2,
+          "title": "苏晚72小时极限改模突破",
+          "duration_sec": 9,
+          "framing": "双人中近景 (Two-Shot MCU)",
+          "camera_motion": "Gentle Orbit & Airflow Float",
+          "character_refs": [
+            "char_03_su_wan_designer",
+            "char_01_lin_mo_casual"
+          ],
+          "scene_ref": "scene_02_2018_dorm_studio",
+          "prop_ref": "prop_02_neck_fan_blueprint",
+          "keyframe_file": "assets/keyframes_ep02/ep02_shot02.png",
+          "keyframe_generated": true,
+          "t2i_prompt_en": "Inside the sunlit 2018 Shenzhen studio, Su Wan with glossy black high ponytail in cream knit cardigan holds up the sleek matte-white bladeless neck fan prototype running a smooth cool blue airflow test with light silk ribbons floating upward cleanly, while Lin Mo in dark charcoal hoodie stands beside her smiling with admiration, warm golden light, polished modern Korean-Chinese urban webtoon manhua style, crisp lineart",
+          "t2i_prompt_zh": "阳光明媚的工作室内，高马尾苏晚手持纯白无叶挂颈风扇样机开启风道测试，轻盈丝带平稳向上飘起绝不卷发，身旁林默露出赞许微笑，精致韩漫暖金光影",
+          "i2v_motion_prompt_en": "Delicate silk test ribbons flutter smoothly upward in the cool airflow from the white neck fan held by Su Wan, she exchanges a bright proud smile with Lin Mo in warm sunlight.",
+          "i2v_motion_prompt_zh": "轻盈测试丝带在苏晚手中的白色无叶挂颈风扇气流中柔和向上飘动，苏晚与身旁的林默相视一笑，金色阳光温暖通透。",
+          "speaker": "苏晚",
+          "voice_emotion": "欣喜自信、轻快专业",
+          "dialogue": "七十二小时连续改模成功了！双涡轮风力提升百分之四十，长发贴上去也绝对不会卷入分毫！",
+          "sfx_bgm": "柔和强劲的涡轮风声 + 明亮弦乐上扬"
+        },
+        {
+          "shot_id": "ep02_shot03",
+          "seq": 3,
+          "title": "布下专利与透明计划防伪杀局",
+          "duration_sec": 8,
+          "framing": "近景 (MCU)",
+          "camera_motion": "Slow Push-In on Screen & Eyes",
+          "character_refs": [
+            "char_01_lin_mo_casual"
+          ],
+          "scene_ref": "scene_02_2018_dorm_studio",
+          "prop_ref": null,
+          "keyframe_file": "assets/keyframes_ep02/ep02_shot03.png",
+          "keyframe_generated": true,
+          "t2i_prompt_en": "Medium close-up of Lin Mo in dark charcoal hoodie sitting calmly at the dual-monitor desk at dusk, clicking the mouse as the bright monitor displays an official golden US PATENT APPROVED seal icon alongside a glowing blue anti-counterfeit QR shield verification badge, cool blue and gold screen light reflecting on Lin Mo's sharp confident face, polished modern Korean-Chinese urban webtoon manhua style",
+          "t2i_prompt_zh": "傍晚双屏电脑前林默沉着点击鼠标，屏幕亮起金色美国外观专利获批印章与蓝色透明计划防伪盾牌二维码图标，蓝金光影映亮他锋利嘴角，精致韩漫风",
+          "i2v_motion_prompt_en": "Lin Mo clicks the mouse calmly, golden patent seal and blue shield icon glow brightly on the monitor, reflecting in his razor-sharp eyes as he smirks.",
+          "i2v_motion_prompt_zh": "林默手指沉稳按下鼠标，屏幕上金色专利印章与蓝色防伪盾牌亮起流光，映照在他锐利自信的眼眸中。",
+          "speaker": "林默（内心独白）",
+          "voice_emotion": "冷静腹黑、猎手收网",
+          "dialogue": "美国加急外观专利与亚马逊Transparency透明计划防伪码已全面激活。没有我的独立加密蓝标，任何跟卖链接上去就是死！",
+          "sfx_bgm": "清脆鼠标锁定声 + 科技盾牌激活音效"
+        },
+        {
+          "shot_id": "ep02_shot04",
+          "seq": 4,
+          "title": "零点跟卖十秒侵权封店！",
+          "duration_sec": 9,
+          "framing": "中近景爆发构图 (Dramatic MCU)",
+          "camera_motion": "Camera Shake + Zoom Out",
+          "character_refs": [
+            "char_04_zhao_kai_villain"
+          ],
+          "scene_ref": null,
+          "prop_ref": "prop_01_account_banned_screen",
+          "keyframe_file": "assets/keyframes_ep02/ep02_shot04.png",
+          "keyframe_generated": true,
+          "t2i_prompt_en": "Dramatic night scene inside a warehouse piled high with unsold knockoff cardboard boxes, villain Zhao Kai in disheveled burgundy shirt, black vest, and askew gold-rimmed glasses slams both fists onto his desk in shock and fury, sweating in panic as his desktop monitor glows bright crimson red displaying an ACCOUNT SUSPENDED warning triangle alert, polished modern Korean-Chinese urban webtoon manhua style",
+          "t2i_prompt_zh": "堆满山寨滞销纸箱的昏暗仓库内，赵凯金丝眼镜歪斜、满头冷汗，双拳砸裂桌面疯狂咆哮，身旁显示器爆出刺眼血红ACCOUNT SUSPENDED封店警告，精致韩漫风",
+          "i2v_motion_prompt_en": "Intense camera shake as the man in gold-rimmed glasses slams both fists onto the desk in fury, red ACCOUNT SUSPENDED screen flashing crimson across his panicked sweaty face.",
+          "i2v_motion_prompt_zh": "强烈震动镜头，金丝眼镜男惊怒交加双拳重重砸在桌上，屏幕刺眼封店红光不断闪烁映照他惨白流汗的脸。",
+          "speaker": "赵凯",
+          "voice_emotion": "惊恐破防、歇斯底里咆哮",
+          "dialogue": "不可能！！跟卖链接刚挂上去不到十秒，怎么会直接触发透明计划侵权封店？！我借高利贷囤的五千台货全砸手里了！！",
+          "sfx_bgm": "刺耳封号警报 + 重拳砸桌巨响 + 玻璃碎裂音效"
+        },
+        {
+          "shot_id": "ep02_shot05",
+          "seq": 5,
+          "title": "冲上新品榜第一，出单如瀑布！",
+          "duration_sec": 9,
+          "framing": "双人欢庆中全景 (Celebration MS)",
+          "camera_motion": "Upward Celebratory Crane",
+          "character_refs": [
+            "char_05_chen_pang_warehouse",
+            "char_01_lin_mo_casual"
+          ],
+          "scene_ref": "scene_02_2018_dorm_studio",
+          "prop_ref": "prop_03_bestseller_badge_chart",
+          "keyframe_file": "assets/keyframes_ep02/ep02_shot05.png",
+          "keyframe_generated": true,
+          "t2i_prompt_en": "Joyous celebration inside the sunlit 2018 Shenzhen studio: Chen Pang in navy polo shirt pumps both fists in the air cheering wildly with excited tears while the thermal label printer spits out long ribbons of shipping labels onto the floor, and Lin Mo in dark charcoal hoodie smiles calmly beside dual monitors glowing with skyrocketing golden sales curves and an orange #1 badge, polished modern Korean-Chinese urban webtoon manhua style",
+          "t2i_prompt_zh": "阳光工作室内狂喜庆祝：陈胖高举双拳热泪盈眶欢呼，热敏面单机狂吐长串物流条码铺满地面，身旁林默微笑立于金色冲天销量曲线与橙色第一徽章屏幕旁，精致韩漫风",
+          "i2v_motion_prompt_en": "Lively camera crane up as Chen Pang pumps his fists cheering with comedic tears of joy, long white thermal barcode label strips streaming rapidly out of the printer beside smiling Lin Mo.",
+          "i2v_motion_prompt_zh": "欢快镜头上摇，陈胖挥舞双拳喜极而泣大喊，热敏打印机飞速吐出长串白色物流面单，身旁林默成竹在胸微笑。",
+          "speaker": "陈胖",
+          "voice_emotion": "喜极而泣、破音狂欢",
+          "dialogue": "默哥神了！！跟卖狗全军覆没，咱们单日破五百单，直接冲上美区新品榜第一名了！！",
+          "sfx_bgm": "清脆出单金币连响 + 热血摇滚副歌爆发"
+        },
+        {
+          "shot_id": "ep02_shot06",
+          "seq": 6,
+          "title": "勾结行业恶霸天盛跨境（悬念卡点）",
+          "duration_sec": 9,
+          "framing": "暗黑商战远中景 (Neo-Noir Wide MS)",
+          "camera_motion": "Slow Ominous Pull-Back",
+          "character_refs": [
+            "char_04_zhao_kai_villain"
+          ],
+          "scene_ref": null,
+          "prop_ref": null,
+          "keyframe_file": "assets/keyframes_ep02/ep02_shot06.png",
+          "keyframe_generated": true,
+          "t2i_prompt_en": "Suspenseful night cliffhanger inside a luxurious dimly-lit penthouse executive office overlooking glittering Shenzhen skyscrapers, desperate Zhao Kai in burgundy shirt and gold-rimmed glasses stands bowing slightly beside a mahogany desk, respectfully presenting a white neck fan sample box to an imposing shadowy corporate tycoon silhouette in a pinstripe suit seated in a high-back leather chair swirling a crystal glass, neo-noir amber and deep blue shadows, polished modern Korean-Chinese urban business webtoon manhua style",
+          "t2i_prompt_zh": "深夜深圳湾顶层奢华总裁办公室，走投无路的赵凯弯腰恭敬将白色挂颈风扇样品盒递向高背真皮椅上摇晃水晶杯的条纹西装商界大佬剪影，暗黑琥珀与深蓝悬疑光影，精致韩漫商战风",
+          "i2v_motion_prompt_en": "Slow ominous pull-back in the dark luxury penthouse office, the shadowy tycoon swirls amber liquid in his crystal glass while Zhao Kai bows his head with a sinister desperate glint in his glasses.",
+          "i2v_motion_prompt_zh": "镜头在昏暗顶层总裁办公室缓缓拉远，高背椅上的大佬剪影轻轻摇晃酒杯，一旁低头哈腰的赵凯镜片闪过阴毒寒光。",
+          "speaker": "赵凯 / 天盛副总",
+          "voice_emotion": "赵凯卑微怨毒 → 大佬低沉危险",
+          "dialogue": "赵凯：周总，这小子手里的挂颈风扇绝对是今年Prime Day的金矿！天盛副总：有意思……敢挡天盛跨境的财路，明天用五倍广告竞价和黑产差评，直接把他按死在摇篮里。",
+          "sfx_bgm": "冰块撞击酒杯声 + 低沉危险大提琴悬念收尾"
+        }
+      ]
+    }
+  ]
+};
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('open');
+    }
+
+    function copyText(btn, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        const old = btn.innerHTML;
+        btn.classList.add('copied');
+        btn.innerHTML = '✅ 已复制';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = old;
+        }, 1400);
+      });
+    }
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    const charMap = {};
+    const charGrid = document.getElementById('char-grid');
+    MANIFEST.characters.forEach(c => {
+      charMap[c.id] = c;
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-img-wrap" onclick="openLightbox('./${c.file}')">
+          <img src="./${c.file}" alt="${escapeHtml(c.name)}" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div class="card-head">
+            <div class="card-title">${escapeHtml(c.name)}</div>
+            <span class="role-tag">已生成</span>
+          </div>
+          <div style="font-size:12.5px;color:var(--muted);">🎭 ${escapeHtml(c.role)} | 🎙️ ${escapeHtml(c.voice_profile)}</div>
+          <div class="prompt-box">${escapeHtml(c.trigger_prompt_en)}</div>
+          <div class="card-actions">
+            <button class="btn-sm" data-copy="${escapeHtml(c.trigger_prompt_en)}">📋 复制英文锚点词</button>
+            <button class="btn-sm" data-copy="${escapeHtml(c.trigger_prompt_zh)}">📋 复制中文设定</button>
+            <a class="btn-sm" href="./${c.file}" target="_blank" rel="noopener">⬇️ 下载立绘</a>
+          </div>
+        </div>
+      `;
+      charGrid.appendChild(card);
+    });
+
+    const sceneMap = {};
+    const sceneGrid = document.getElementById('scene-grid');
+    MANIFEST.scenes.forEach(s => {
+      sceneMap[s.id] = s;
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-img-wrap" onclick="openLightbox('./${s.file}')">
+          <img src="./${s.file}" alt="${escapeHtml(s.name)}" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div class="card-head">
+            <div class="card-title">${escapeHtml(s.name)}</div>
+            <span class="role-tag">已生成</span>
+          </div>
+          <div style="font-size:12.5px;color:var(--muted);">🎨 光影氛围：${escapeHtml(s.mood)}</div>
+          <div class="prompt-box">${escapeHtml(s.scene_prompt_en)}</div>
+          <div class="card-actions">
+            <button class="btn-sm" data-copy="${escapeHtml(s.scene_prompt_en)}">📋 复制场景 Prompt</button>
+            <a class="btn-sm" href="./${s.file}" target="_blank" rel="noopener">⬇️ 下载空镜</a>
+          </div>
+        </div>
+      `;
+      sceneGrid.appendChild(card);
+    });
+
+    const propMap = {};
+    const propGrid = document.getElementById('prop-grid');
+    MANIFEST.props.forEach(p => {
+      propMap[p.id] = p;
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-img-wrap" onclick="openLightbox('./${p.file}')">
+          <img src="./${p.file}" alt="${escapeHtml(p.name)}" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div class="card-head">
+            <div class="card-title">${escapeHtml(p.name)}</div>
+            <span class="role-tag">已生成原图</span>
+          </div>
+          <div class="prompt-box">${escapeHtml(p.prop_prompt_en)}</div>
+          <div class="card-actions">
+            <button class="btn-sm" data-copy="${escapeHtml(p.prop_prompt_en)}">📋 复制道具 Prompt</button>
+            <a class="btn-sm" href="./${p.file}" target="_blank" rel="noopener">⬇️ 下载道具图</a>
+          </div>
+        </div>
+      `;
+      propGrid.appendChild(card);
+    });
+
+    function renderShots(shots, containerId) {
+      const container = document.getElementById(containerId);
+      shots.forEach(sh => {
+        const refs = [];
+        (sh.character_refs || []).forEach(cid => {
+          if (charMap[cid]) refs.push({ label: charMap[cid].name, file: charMap[cid].file });
+        });
+        if (sh.scene_ref && sceneMap[sh.scene_ref]) {
+          refs.push({ label: sceneMap[sh.scene_ref].name, file: sceneMap[sh.scene_ref].file });
+        }
+        if (sh.prop_ref && propMap[sh.prop_ref] && propMap[sh.prop_ref].generated) {
+          refs.push({ label: propMap[sh.prop_ref].name, file: propMap[sh.prop_ref].file });
+        }
+
+        const chipsHtml = refs.map(r => `
+          <span class="ref-chip" onclick="openLightbox('./${r.file}')">🔗 ${escapeHtml(r.label)}</span>
+        `).join('');
+
+        const item = document.createElement('div');
+        item.className = 'shot-card';
+        item.innerHTML = `
+          <div class="shot-refs">
+            <div class="shot-badge-bar">
+              <span class="shot-num">镜 ${String(sh.seq).padStart(2, '0')}</span>
+              <strong style="font-size:16px;">${escapeHtml(sh.title)}</strong>
+            </div>
+            <div class="kf-preview" onclick="openLightbox('./${sh.keyframe_file}')">
+              <span class="kf-tag">✅ 首帧已生成 (1408×768)</span>
+              <img src="./${sh.keyframe_file}" alt="${escapeHtml(sh.title)}" loading="lazy" />
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);">
+              <span>⏱️ ${sh.duration_sec}s | 🕹️ <span style="color:#7dd3fc;">${escapeHtml(sh.camera_motion)}</span></span>
+              <a class="btn-sm" style="padding:3px 9px;font-size:11.5px;" href="./${sh.keyframe_file}" target="_blank" rel="noopener">⬇️ 下载首帧</a>
+            </div>
+            <div class="ref-chips">${chipsHtml}</div>
+          </div>
+          <div>
+            <div class="dialogue-banner">
+              <div class="dialogue-meta">🎙️ ${escapeHtml(sh.speaker)} 【情绪指令：${escapeHtml(sh.voice_emotion)}】 | 🎵 ${escapeHtml(sh.sfx_bgm)}</div>
+              <div class="dialogue-text">「${escapeHtml(sh.dialogue)}」</div>
+            </div>
+            <div class="prompt-dual">
+              <div>
+                <div class="prompt-col-label">
+                  <span>🎨 Flux / SDXL 首帧生图提示词 (EN)</span>
+                  <button class="btn-sm" style="padding:3px 9px;font-size:11.5px;" data-copy="${escapeHtml(sh.t2i_prompt_en)}">复制 T2I</button>
+                </div>
+                <div class="prompt-box" style="max-height:130px;">${escapeHtml(sh.t2i_prompt_en)}</div>
+              </div>
+              <div>
+                <div class="prompt-col-label">
+                  <span>🎞️ Wan 2.1 图生视频动态运镜词 (中文)</span>
+                  <button class="btn-sm" style="padding:3px 9px;font-size:11.5px;" data-copy="${escapeHtml(sh.i2v_motion_prompt_zh)}">复制运镜词</button>
+                </div>
+                <div class="prompt-box" style="max-height:130px;">${escapeHtml(sh.i2v_motion_prompt_zh)}
+
+[EN]: ${escapeHtml(sh.i2v_motion_prompt_en)}</div>
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    renderShots(MANIFEST.episodes[0].shots, 'shot-list-ep01');
+    renderShots(MANIFEST.episodes[1].shots, 'shot-list-ep02');
+
+    const copyZipBtn = document.getElementById('copy-zip-url-btn');
+    if (copyZipBtn) {
+      copyZipBtn.addEventListener('click', () => {
+        const directUrl = new URL('./download-pack.zip', window.location.href).href;
+        copyText(copyZipBtn, directUrl);
+      });
+    }
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', () => copyText(btn, btn.getAttribute('data-copy')));
+    });
+  </script>
+</body>
+</html>

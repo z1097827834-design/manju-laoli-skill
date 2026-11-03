@@ -1,0 +1,52 @@
+{
+  "project": "重生之我在做亚马逊",
+  "episode": 1,
+  "aspect_ratio": "16:9",
+  "canvas": { "width": 1376, "height": 768, "note": "资产板画布固定 16:9，成片同为 16:9" },
+  "target_model": {
+    "video": "Wan 2.1 I2V (ComfyUI 内置 WanImageToVideo)",
+    "frames_per_clip": 81,
+    "fps": 16,
+    "seconds_per_clip": 5.06,
+    "shift": 8.0
+  },
+  "assets": [
+    { "id": "图1",  "code": "CHR-01",  "type": "character", "name": "陈默",     "file": "01_资产图/图01_CHR-01_陈默_四格板.png",        "panels": 4, "use": "锁脸/发型/服装/比例，全段挂" },
+    { "id": "图2",  "code": "CHR-02",  "type": "character", "name": "赵鹏",     "file": "01_资产图/图02_CHR-02_赵鹏_四格板.png",        "panels": 4, "use": "锁脸，段3/段9 必须挂" },
+    { "id": "图8",  "code": "CHR-03",  "type": "character", "name": "苏晚",     "file": "01_资产图/图08_CHR-03_苏晚_四格板.png",        "panels": 4, "use": "锁脸，段5 必须挂" },
+    { "id": "图3",  "code": "SCN-01",  "type": "scene",     "name": "星辰办公室·母版", "file": "01_资产图/图03_SCN-01_星辰办公室_场景母版.png", "panels": 1, "use": "空镜全景，九宫格缺失时用" },
+    { "id": "图4",  "code": "SCN-01",  "type": "scene",     "name": "星辰办公室·九宫格", "file": "01_资产图/图04_SCN-01_星辰办公室_九宫格.png", "panels": 9, "use": "1 张 = 9 机位，段1–3 优先" },
+    { "id": "图6",  "code": "SCN-02",  "type": "scene",     "name": "出租屋·母版",     "file": "01_资产图/图06_SCN-02_深夜出租屋_场景母版.png", "panels": 1, "use": "空镜全景" },
+    { "id": "图7",  "code": "SCN-02",  "type": "scene",     "name": "出租屋·九宫格",   "file": "01_资产图/图07_SCN-02_深夜出租屋_九宫格.png", "panels": 9, "use": "段5/7/8/10 优先" },
+    { "id": "图9",  "code": "SCN-03",  "type": "scene",     "name": "雨夜写字楼外景",   "file": "01_资产图/图09_SCN-03_写字楼雨夜外景_母版.png", "panels": 1, "use": "段4 唯一场景" },
+    { "id": "图10", "code": "SCN-04",  "type": "scene",     "name": "代工厂车间·母版", "file": "01_资产图/图10_SCN-04_代工厂车间_母版.png", "panels": 1, "use": "空镜全景；段6 不挂，用图13" },
+    { "id": "图13", "code": "SCN-04",  "type": "scene",     "name": "代工厂车间·九宫格","file": "01_资产图/图13_SCN-04_车间_九宫格.png", "panels": 9, "use": "段6 优先，构图参照第3/4格" },
+    { "id": "图11", "code": "SCN-05",  "type": "scene",     "name": "展会摊位·母版",   "file": "01_资产图/图11_SCN-05_跨境展会摊位_母版.png", "panels": 1, "use": "空镜全景" },
+    { "id": "图14", "code": "SCN-05",  "type": "scene",     "name": "展会摊位·九宫格", "file": "01_资产图/图14_SCN-05_展会_九宫格.png", "panels": 9, "use": "段9 优先" },
+    { "id": "图5A", "code": "PRP-01a", "type": "prop",      "name": "股权转让协议",    "file": "01_资产图/图5A_PRP-01a_股权转让协议_四格板.png", "panels": 4, "use": "段1–3" },
+    { "id": "图5B", "code": "PRP-01b", "type": "prop",      "name": "便签笔记本",      "file": "01_资产图/图5B_PRP-01b_便签笔记本_四格板.png", "panels": 4, "use": "段1–3/5/7" },
+    { "id": "图5C", "code": "PRP-01c", "type": "prop",      "name": "美式咖啡杯",      "file": "01_资产图/图5C_PRP-01c_美式咖啡杯_四格板.png", "panels": 4, "use": "段1–3" },
+    { "id": "图12A","code": "PRP-02a", "type": "prop",      "name": "挂颈风扇样机",    "file": "01_资产图/图12A_PRP-02a_挂颈风扇样机_四格板.png", "panels": 4, "use": "段6" },
+    { "id": "图12B","code": "PRP-02b", "type": "prop",      "name": "FBA 入仓箱",      "file": "01_资产图/图12B_PRP-02b_FBA入仓箱_四格板.png", "panels": 4, "use": "段7" },
+    { "id": "图12C","code": "PRP-02c", "type": "prop",      "name": "后台手机",        "file": "01_资产图/图12C_PRP-02c_后台手机_四格板.png", "panels": 4, "use": "段8/9/10" }
+  ],
+  "segments": [
+    { "seg": 1,  "title": "桌上醒来·认出这张纸·赵鹏推协议", "time": "00:00-00:10", "clips": 4, "first_frame": ["图4#6", "图1#1", "图5A#1"], "tension": 8 },
+    { "seg": 2,  "title": "合上协议推回·这辈子不签了",       "time": "00:10-00:20", "clips": 2, "first_frame": ["段1末帧", "图1#1"], "tension": 8 },
+    { "seg": 3,  "title": "赵鹏拍桌发难·摘工牌离场",         "time": "00:20-00:30", "clips": 2, "first_frame": ["图2#1", "图1#2"], "tension": 9 },
+    { "seg": 4,  "title": "雨夜抱纸箱出楼",                 "time": "00:30-00:40", "clips": 2, "first_frame": ["图9"], "tension": 6 },
+    { "seg": 5,  "title": "出租屋白板·苏晚送U盘",            "time": "00:40-00:50", "clips": 2, "first_frame": ["图7#3", "图8#2"], "tension": 4 },
+    { "seg": 6,  "title": "车间验样·戳穿模具费",             "time": "00:50-01:00", "clips": 2, "first_frame": ["图13#3", "段6镜6A末帧"], "tension": 7 },
+    { "seg": 7,  "title": "封箱·后台0单",                   "time": "01:00-01:10", "clips": 2, "first_frame": ["图12B#3", "图7#7"], "tension": 5 },
+    { "seg": 8,  "title": "凌晨首单",                       "time": "01:10-01:20", "clips": 4, "first_frame": ["图12C#1", "图1#1", "镜8B末帧", "图12C#3"], "tension": 9 },
+    { "seg": 9,  "title": "展会打脸",                       "time": "01:20-01:30", "clips": 3, "first_frame": ["图14#1", "图2#2", "图12C#1"], "tension": 10 },
+    { "seg": 10, "title": "恶意投诉钩子",                   "time": "01:30-01:40", "clips": 3, "first_frame": ["图7#5", "图12C#4", "图1#1"], "tension": 10 }
+  ],
+  "totals": { "clips": 26, "frames": 2106, "raw_seconds": 131, "final_seconds": 100 },
+  "rules": [
+    "每段末 1 秒是定格帧，剪辑时必须裁掉",
+    "换场段的段缝参考图只锁人物姿态与光向，不锁空间",
+    "Wan 单次 81 帧 @16fps，成片需补帧到 24/30fps",
+    "正向提示词不写否定式；要压住的东西写进负向框"
+  ]
+}

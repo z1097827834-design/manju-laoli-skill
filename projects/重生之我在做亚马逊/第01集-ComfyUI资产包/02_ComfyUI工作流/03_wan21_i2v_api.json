@@ -1,0 +1,213 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "wan2.1_i2v_480p_14B_fp8_e4m3fn.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "① Wan2.1 I2V 主模型（14B fp8）"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan",
+      "device": "default"
+    },
+    "_meta": {
+      "title": "② 文本编码器（umt5-xxl fp8）"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "wan_2.1_vae.safetensors"
+    },
+    "_meta": {
+      "title": "③ VAE"
+    }
+  },
+  "4": {
+    "class_type": "CLIPVisionLoader",
+    "inputs": {
+      "clip_name": "clip_vision_h.safetensors"
+    },
+    "_meta": {
+      "title": "④ CLIP Vision（I2V 需要）"
+    }
+  },
+  "5": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "图01_CHR-01_陈默_四格板.png",
+      "upload": "image"
+    },
+    "_meta": {
+      "title": "⑤ 首帧图 ⚠️ 每段换成对应资产/末帧截图"
+    }
+  },
+  "6": {
+    "class_type": "CLIPVisionEncode",
+    "inputs": {
+      "crop": "none",
+      "clip_vision": [
+        "4",
+        0
+      ],
+      "image": [
+        "5",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "⑥ 图像视觉编码"
+    }
+  },
+  "7": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "Cinematic live-action shot, cold blue-grey low-key lighting, low saturation, fine film grain, hard directional light, 16:9 widescreen. A 29-year-old Chinese man in a light grey-white cotton shirt with sleeves rolled to mid-forearm sits at a matte-white long meeting table in a dim open-plan office. He lifts his head slowly, his eyes open wide, a bead of sweat slides down his temple into his sideburn. Camera pushes in very slowly on an 85 mm lens, shallow depth of field, focus on his eyes. Natural subtle facial movement, controlled slow pacing, steady handheld breath, realistic skin texture, no digital gloss.",
+      "clip": [
+        "2",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "⑦ 正向提示词（英文，描述运镜与动作）"
+    }
+  },
+  "8": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "still image, static, frozen frame, blurry, low quality, distorted face, extra fingers, warped hands, text overlay, watermark, logo, cartoon, anime, 3d render, oversaturated, HDR bloom",
+      "clip": [
+        "2",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "⑧ 负向提示词"
+    }
+  },
+  "9": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "shift": 8.0,
+      "model": [
+        "1",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "⑨ Wan 推荐 shift=8.0"
+    }
+  },
+  "10": {
+    "class_type": "WanImageToVideo",
+    "inputs": {
+      "width": 1280,
+      "height": 1,
+      "length": 81,
+      "batch_size": 704,
+      "vae": [
+        "3",
+        0
+      ],
+      "start_image": [
+        "5",
+        0
+      ],
+      "clip_vision_output": [
+        "6",
+        0
+      ],
+      "positive": [
+        "7",
+        0
+      ],
+      "negative": [
+        "8",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "⑩ I2V 条件（81帧 / 704×1280 / 16fps）"
+    }
+  },
+  "11": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 42,
+      "steps": 30,
+      "cfg": 6.0,
+      "sampler_name": "uni_pc",
+      "scheduler": "simple",
+      "denoise": 1.0,
+      "model": [
+        "9",
+        0
+      ],
+      "positive": [
+        "10",
+        0
+      ],
+      "negative": [
+        "10",
+        1
+      ],
+      "latent_image": [
+        "10",
+        2
+      ]
+    },
+    "_meta": {
+      "title": "⑪ KSampler（steps30 / cfg6 / uni_pc）"
+    }
+  },
+  "12": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "vae": [
+        "3",
+        0
+      ],
+      "samples": [
+        "11",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "⑫ VAE 解码"
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "fps": 16.0,
+      "images": [
+        "12",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "⑬ 合成视频（16fps）"
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "filename_prefix": "video/wan21_第01集_段01",
+      "format": "mp4",
+      "codec": "h264",
+      "video": [
+        "13",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "⑭ 保存 mp4 ⚠️ 每段改文件名"
+    }
+  }
+}

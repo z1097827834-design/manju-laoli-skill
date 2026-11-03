@@ -1,0 +1,105 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {},
+    "_meta": {
+      "title": "① 大模型（Illustrious / SDXL 系）"
+    }
+  },
+  "2": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "live-action photographic character sheet, single panel, 16:9, a 29-year-old Chinese man, natural skin texture with visible pores, cinematic low-key cold blue-grey grade, hard directional side light, fine film grain, realistic 6.5-7.5 head proportions, neutral light-grey seamless background",
+      "clip": [
+        "1",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "② 正向提示词（单格 · 英文）"
+    }
+  },
+  "3": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "anime, cartoon, 3d render, illustration, glossy plastic skin, watermark, text, logo, extra limbs, deformed face, low quality",
+      "clip": [
+        "1",
+        1
+      ]
+    },
+    "_meta": {
+      "title": "③ 负向提示词"
+    }
+  },
+  "4": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": 1376,
+      "height": 768,
+      "batch_size": 1
+    },
+    "_meta": {
+      "title": "④ 画布 1376×768（16:9）"
+    }
+  },
+  "5": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 20261103,
+      "steps": 28,
+      "cfg": 5.5,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "denoise": 1.0,
+      "model": [
+        "1",
+        0
+      ],
+      "positive": [
+        "2",
+        0
+      ],
+      "negative": [
+        "3",
+        0
+      ],
+      "latent_image": [
+        "4",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "⑤ KSampler（28步 / cfg5.5）"
+    }
+  },
+  "6": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "vae": [
+        "1",
+        2
+      ],
+      "samples": [
+        "5",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "VAEDecode"
+    }
+  },
+  "7": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "图01_陈默_面板1_面部特写",
+      "images": [
+        "6",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "⑥ 保存单格 ⚠️ 命名规则见说明"
+    }
+  }
+}

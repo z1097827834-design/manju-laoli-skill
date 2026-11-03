@@ -1,0 +1,38 @@
+重生之我在做亚马逊 第01集 ComfyUI资产包
+打包时间: 2026-11-03 02:32:11
+文件数: 32   包大小: 39.48 MB
+======================================================================
+SHA256                     大小  文件
+----------------------------------------------------------------------
+1016f5eb6eb7b4a0       2162K  第01集-ComfyUI资产包/01_资产图/图01_CHR-01_陈默_四格板.png
+a6803c9775bb6635       2177K  第01集-ComfyUI资产包/01_资产图/图02_CHR-02_赵鹏_四格板.png
+057df3088801aa41       2464K  第01集-ComfyUI资产包/01_资产图/图03_SCN-01_星辰办公室_场景母版.png
+c5ff345b2e66b93a       2642K  第01集-ComfyUI资产包/01_资产图/图04_SCN-01_星辰办公室_九宫格.png
+f91a2d1d8eb1a5f3       2262K  第01集-ComfyUI资产包/01_资产图/图06_SCN-02_深夜出租屋_场景母版.png
+e5e07c9b0b4e87e3       2492K  第01集-ComfyUI资产包/01_资产图/图07_SCN-02_深夜出租屋_九宫格.png
+fa0283855e41b21d       2091K  第01集-ComfyUI资产包/01_资产图/图08_CHR-03_苏晚_四格板.png
+52999bb220570d6e       2624K  第01集-ComfyUI资产包/01_资产图/图09_SCN-03_写字楼雨夜外景_母版.png
+8d9079e86189a02f       2736K  第01集-ComfyUI资产包/01_资产图/图10_SCN-04_代工厂车间_母版.png
+796a2841d458f060       2168K  第01集-ComfyUI资产包/01_资产图/图11_SCN-05_跨境展会摊位_母版.png
+b15efd233ee2d9a7       1760K  第01集-ComfyUI资产包/01_资产图/图12A_PRP-02a_挂颈风扇样机_四格板.png
+035dfbebe69eabe7       2146K  第01集-ComfyUI资产包/01_资产图/图12B_PRP-02b_FBA入仓箱_四格板.png
+62d9f37d07cef05d       1705K  第01集-ComfyUI资产包/01_资产图/图12C_PRP-02c_后台手机_四格板.png
+862c5efd613d26e9       2736K  第01集-ComfyUI资产包/01_资产图/图13_SCN-04_车间_九宫格.png
+7654ef8273a24922       2390K  第01集-ComfyUI资产包/01_资产图/图14_SCN-05_展会_九宫格.png
+b2ff2a947ece8fd5       1670K  第01集-ComfyUI资产包/01_资产图/图5A_PRP-01a_股权转让协议_四格板.png
+aad71b0685da5f96       1982K  第01集-ComfyUI资产包/01_资产图/图5B_PRP-01b_便签笔记本_四格板.png
+34b8ff16c13796a8       2121K  第01集-ComfyUI资产包/01_资产图/图5C_PRP-01c_美式咖啡杯_四格板.png
+960a969650b42bda          2K  第01集-ComfyUI资产包/02_ComfyUI工作流/01_sdxl_manhua_t2i_api.json
+86315e5e738fe93a          7K  第01集-ComfyUI资产包/02_ComfyUI工作流/01_sdxl_manhua_t2i_ui.json
+e432213edbff55be          4K  第01集-ComfyUI资产包/02_ComfyUI工作流/03_wan21_i2v_api.json
+d1b89d1fc21ec52e         13K  第01集-ComfyUI资产包/02_ComfyUI工作流/03_wan21_i2v_ui.json
+e196c6551d1bd8a2          6K  第01集-ComfyUI资产包/03_提示词/asset_manifest.json
+6152d6d102d00d15         15K  第01集-ComfyUI资产包/03_提示词/ep01_wan21_prompts_zh.md
+a2183e6e3c93ed21         16K  第01集-ComfyUI资产包/04_脚本/build_workflows.py
+d7a232e226e61f24         23K  第01集-ComfyUI资产包/04_脚本/run_comfy_batch.py
+91d29753e67a28c9          6K  第01集-ComfyUI资产包/04_脚本/stitch_sheet.py
+1f7ef5589e2893ff         12K  第01集-ComfyUI资产包/05_文档/ComfyUI操作手册.md
+5647e3b539441e45         75K  第01集-ComfyUI资产包/05_文档/工作台总览.html
+a32dc5f840b2b296         45K  第01集-ComfyUI资产包/05_文档/第01集-投喂稿.md
+bd12ac4691a24736          9K  第01集-ComfyUI资产包/05_文档/资产总表与接线单.md
+d53c15bf526b4ace          4K  第01集-ComfyUI资产包/README.md
