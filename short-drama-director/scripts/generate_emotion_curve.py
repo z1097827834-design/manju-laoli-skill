@@ -26,18 +26,30 @@ except ImportError:
 
 # ── 中文字体检测与配置（macOS/常见 Linux 路径回退）──
 def _setup_cjk_font():
-    """为 matplotlib 配置可用的中文字体，避免图形中文变方块。"""
+    """为 matplotlib 配置可用的中文字体，避免图形中文变方块。
+
+    三级回退（2026-11 安装环境补强）：
+      ① 已知字体文件路径（macOS / Linux 发行版自带）；
+      ② 已装字体族名扫描——覆盖 Windows 常见中文字体与 pip 装的中文字体包
+         （如 `pip install chineseize-matplotlib` 在无系统字体容器里提供 SimHei）；
+      ③ `chineseize_matplotlib` 包（若已安装，它会自行完成 rcParams 配置）。
+    三级都未命中则保持 matplotlib 默认，只影响中文渲染，不阻断出图与其余链路。
+    """
+    from matplotlib import font_manager
+
     candidates = [
         "/System/Library/Fonts/Hiragino Sans GB.ttc",   # macOS
         "/System/Library/Fonts/STHeiti Light.ttc",       # macOS
         "/System/Library/Fonts/Supplemental/Songti.ttc", # macOS
         "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",  # Linux
         "/usr/share/fonts/truetype/wqy/wqy-microhei.ttc",          # Linux
+        "/usr/share/fonts/truetype/arphic/uming.ttc",              # Linux
+        "C:/Windows/Fonts/msyh.ttc",                               # Windows 微软雅黑
+        "C:/Windows/Fonts/simhei.ttf",                             # Windows 黑体
     ]
     for path in candidates:
         if os.path.exists(path):
             try:
-                from matplotlib import font_manager
                 font_manager.fontManager.addfont(path)
                 name = font_manager.FontProperties(fname=path).get_name()
                 matplotlib.rcParams["font.family"] = name
@@ -45,6 +57,30 @@ def _setup_cjk_font():
                 return name
             except Exception:
                 continue
+
+    # ② 已装字体族名扫描（顺序即优先级）
+    wanted = [
+        "Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC",
+        "SimHei", "Microsoft YaHei", "PingFang SC", "Heiti SC",
+        "WenQuanYi Micro Hei", "SimSun", "AR PL UMing CN", "Droid Sans Fallback",
+    ]
+    try:
+        installed = {f.name for f in font_manager.fontManager.ttflist}
+    except Exception:
+        installed = set()
+    for name in wanted:
+        if name in installed:
+            matplotlib.rcParams["font.family"] = name
+            matplotlib.rcParams["axes.unicode_minus"] = False
+            return name
+
+    # ③ 中文字体包兜底
+    try:
+        import chineseize_matplotlib  # noqa: F401
+        matplotlib.rcParams["axes.unicode_minus"] = False
+        return "chineseize_matplotlib"
+    except Exception:
+        pass
     return None
 
 _setup_cjk_font()

@@ -149,8 +149,27 @@
 
 > 📦 **部署（Multi-Agent 套装）**：本仓根目录**并列** 1 个总控（`short-drama-director/`）+ 12 个子技能（`sd-*-engine/`）。**支持多技能目录的平台（如 OpenClaw）把 13 个技能目录整体同级部署即可，主入口 = `short-drama-director`**；要求「zip 根即 `SKILL.md`」的单技能平台，请以 `short-drama-director/SKILL.md` 为主入口并把子技能**同级**补齐。
 
+### 🚀 一键安装（推荐 · 纯标准库 · 装完当场自检）
+
+`openclaw skills install ./short-drama-director` 只会装**总控一个**目录，而总控对子技能的引用一律是「包根相对」路径（`sd-asset-engine/references/xxx.md`）——**子技能不在同级就会全断**。所以套装请用仓根安装器，它把 13 个目录**整体同级**落地，并在**安装副本上**跑完自检（结构 / 跨模块引用 / 7 个机检脚本 / 143 份 md 包级自检）：
+
 ```bash
-# 安装到 OpenClaw（总控 + 12 子技能整体同级部署）
+python3 install.py                        # 装到 ~/.openclaw/workspace/skills（默认 · agent 私有）
+python3 install.py --target global        # ~/.openclaw/skills（所有 agent 共享）
+python3 install.py --target agents         # ~/.agents/skills（通用 .agents 格式）
+python3 install.py --dest /path/skills    # 自定义 skills 根
+python3 install.py --with-deps            # 顺带装可选依赖（matplotlib + 中文字体兜底）
+python3 install.py --verify               # 只体检已装副本
+python3 install.py --uninstall            # 只删本套装 13 个目录，不碰同级其它技能
+python3 install.py --layout single --zip out.zip   # 打「zip 根即 SKILL.md」移植包
+```
+
+装完在平台侧确认：OpenClaw 自动热加载，`openclaw skills list` 可查；清单没刷新再 `openclaw gateway restart`。此后**直接对助手说需求**即可（总控自动路由，用户不用点名子技能）：
+
+> 「帮我做一集短剧，题材是重生复仇，Seedance 2.5，竖屏」
+
+```bash
+# 手动安装到 OpenClaw（仅总控；子技能仍需同级补齐，见上）
 openclaw skills install ./short-drama-director --as short-drama-director
 
 # 包级自检（50 份规则库静态 + 语义回归）
@@ -181,6 +200,7 @@ python3 short-drama-director/scripts/build_board_lite.py <项目.md>
 ```
 lixiaoxiao9888-create/manju-laoli-skill/        # V7.4.26 多技能套装（164 文件）
 ├── README.md                                   # 本落地页（中文 + English）
+├── install.py                                  # ★ 套装一键安装器（13 目录同级部署 + 装后自检 / 卸载 / 打包）
 ├── LICENSE / .gitignore
 ├── short-drama-director/                       # L0 总控（62 文件 · 50 份规则库 · 机检脚本）
 │   ├── SKILL.md                                #   总控路由 + 工作法 + 模块索引
@@ -339,7 +359,16 @@ Genre-agnostic: anything that goes **script → storyboard → video-model feed*
 > 📦 **Deploy (multi-agent suite):** the repo root holds 1 router (`short-drama-director/`) + 12 sub-skills (`sd-*-engine/`) side by side. On multi-skill platforms (e.g. OpenClaw) deploy all 13 directories at the same level; the main entry is `short-drama-director`.
 
 ```bash
-# Install into OpenClaw
+# One-command install (stdlib only; self-checks the *installed copy* afterwards)
+python3 install.py                       # → ~/.openclaw/workspace/skills (default)
+python3 install.py --target global       # → ~/.openclaw/skills (shared by all agents)
+python3 install.py --dest /path/skills   # custom skills root
+python3 install.py --with-deps           # also install matplotlib + CJK font fallback
+python3 install.py --verify              # health-check an existing install
+python3 install.py --uninstall           # remove only this suite's 13 dirs
+python3 install.py --layout single --zip out.zip   # portable pack (SKILL.md at zip root)
+
+# Manual install into OpenClaw (router only — sub-skills must still sit side by side)
 openclaw skills install ./short-drama-director --as short-drama-director
 
 # Package lint (48 rulebooks, static + semantic regression)
@@ -362,6 +391,7 @@ python3 short-drama-director/scripts/build_board_lite.py <project.md>
 ```
 lixiaoxiao9888-create/manju-laoli-skill/        # V7.4.26 multi-skill suite (164 files)
 ├── README.md                                   # landing (Chinese + English)
+├── install.py                                  # ★ suite installer (13 dirs side by side + post-install self-check / uninstall / zip)
 ├── LICENSE / .gitignore
 ├── short-drama-director/                       # L0 router (62 files · 48 rulebooks · lint scripts)
 ├── sd-decision-engine/                         # L1 decision (E01–E15)
