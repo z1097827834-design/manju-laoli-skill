@@ -16,3 +16,5 @@ desktop.ini
 _tmp/
 *.tmp
 *.log
+# 内部工作档案不进交付包
+projects/*/_内部_*

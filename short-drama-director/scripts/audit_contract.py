@@ -258,10 +258,27 @@ def audit_markdown(text, mode="auto", director=None, delivery=None):
             )
 
     # 5. CT5: P4 Feed blocks & segment boundary table
+    # 2026-11-07 修复（P1 级 · 规则互锁）：A 锁为 MiniMax H3 时，权威 `h3-adapter.md` 开篇明定
+    # H3 是「格式转换支线」——P4 输出壳由七段式**转换成六段式（全英文）**，七段式栏名【时间轴分镜】
+    # 【站位声明】本就不该出现在终稿里。旧逻辑只认七段式，导致 H3 支线的稿子**永远不可能**通过
+    # CT5-P4F（实测本任务四段全绿仍被判缺），逼人为了过闸把废弃壳塞回正文。
+    # 现态：六段式 H3 原生壳（六项齐备）与七段式**等价放行**，并在通过信息里标明是哪个壳。
+    _h3_six = ("subject_definitions", "summary", "retention_analysis",
+               "detailed_description", "overall_soundscape", "non_diegetic_music")
+    _h3_hits = [k for k in _h3_six if k in text]
     if "【时间轴分镜】" in text and "【站位声明】" in text:
         passed.append("CT5-P4F P4 七段式投喂提示词主体在位")
+    elif len(_h3_hits) == len(_h3_six):
+        passed.append(
+            "CT5-P4F P4 投喂提示词主体在位（H3 支线：六段式原生壳六项齐备，"
+            "经 h3-adapter.md §二 七段式→六段式映射等价核销）"
+        )
     else:
-        issues.append("CT5-P4F 缺失 P4 七段式投喂提示词主体")
+        issues.append(
+            "CT5-P4F 缺失 P4 投喂提示词主体——须为七段式（【时间轴分镜】+【站位声明】），"
+            "或 A 锁为 MiniMax H3 时给出六段式原生壳六项齐全"
+            f"（当前六段式命中 {len(_h3_hits)}/6：{'、'.join(_h3_hits) or '无'}）"
+        )
 
     # 5b. CT5-P45 预演故事板（★审计补丁P1 新增 · 治「规则写了但没有任何门，永远不出」）
     #   旧态：P4.5 在 SKILL.md 里被定义为「可选附加件 · 默认不附」，契约 14 项里没有它，
